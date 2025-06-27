@@ -79,7 +79,7 @@ function App() {
           </section>
         </section>
         <section className="tech-side">
-          <div className="tech-side-block"><span className="tech-side-status"><BuildingIcon /> Building nothing right now...</span></div>
+          <div className="tech-side-block"><span className="tech-side-status"><BuildingIcon /> Building Telegram Auto Post Bot</span></div>
           <a
             href="https://t.me/kwtd6v"
             target="_blank"
@@ -133,7 +133,7 @@ function App() {
             </div>
             <div className="project-card">
               <div style={{display:'flex',alignItems:'center',gap:'0.5em',marginBottom:'0.5rem'}}>
-                <span className="icon"><BotStickerComp width={30} height={30} />></span>
+                <span className="icon"><BotStickerComp width={30} height={30} /></span>
                 <h4 className="accent" style={{margin:0}}>liana_v_ch</h4>
               </div>
               <p>Personal service website built with React.</p>
