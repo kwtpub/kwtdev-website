@@ -229,11 +229,7 @@ left: 50%;
     overflow-x: auto;
   }
   .tech-list {
-    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
-    justify-items: center;
-    margin-left: 0;
-    margin-right: 0;
   }
   .tech-icon {
     width: 36px;
@@ -481,9 +477,10 @@ left: 50%;
 }
 
 .tech-list {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   list-style: none;
   padding: 0;
   margin: 0;

@@ -16,7 +16,7 @@ function BotSticker({ width = 120, height = 120 }) {
     return () => anim.destroy();
   }, []);
 
-  return <div ref={container} style={{ width, height, margin: '0 auto' }} />;
+  return <div ref={container} style={{ width, height, margin: '0 0' }} />;
 }
 
 export default BotSticker; 
