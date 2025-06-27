@@ -214,9 +214,9 @@ left: 50%;
     justify-content: flex-start;
   }
   .hero-avatar-top {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+    margin-right: 0;
+    margin-left: 0;
+    justify-content: flex-start;
   }
   .hero-icons-top .icon {
     width: 32px;
@@ -231,6 +231,9 @@ left: 50%;
   .tech-list {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
+    justify-items: center;
+    margin-left: 0;
+    margin-right: 0;
   }
   .tech-icon {
     width: 36px;
