@@ -17,16 +17,14 @@ import MongoIcon from './components/MongoIcon';
 import LinuxIcon from './components/LinuxIcon';
 import NeovimIcon from './components/NeovimIcon';
 import BotStickerCopy from './BotSticker copy';
+import BotStickerLoveYou from './BotStickerLoveYou.jsx'
 import BotStickerComp from './BotStickerComp.jsx'
-import BotStickerLoveYou from './BotStickerLoveYou.jsx';
-
-
 function App() {
   return (
     <div className="portfolio-root">
       <div className="hero-icons-top">
         <div className="hero-avatar-top">
-          <img src="https://res.cloudinary.com/dhx2rvn4s/image/upload/v1751044969/Pngtree_mountain_logo_design_vector_5286636_fqpzrl.jpg" alt="avatar" width={56} height={56} style={{objectFit: 'cover', borderRadius: 16}} />
+          <img src="/src/assets/—Pngtree—mountain logo design vector_5286636.png" alt="avatar" width={56} height={56} style={{objectFit: 'cover', borderRadius: 16}} />
         </div>
         <a href="https://github.com/kwtpub" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
           <span className="icon"><GithubIcon /></span>
@@ -80,22 +78,18 @@ function App() {
         </section>
         <section className="tech-side">
           <div className="tech-side-block"><span className="tech-side-status"><BuildingIcon /> Building Telegram Auto Post Bot</span></div>
-          <a
-            href="https://t.me/kwtd6v"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="tech-side-block"
-            style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
-            aria-label="Online in Telegram"
-          >
-            <span className="tech-side-status">
-              <TelegramIcon />
-              <span className="tech-side-labels">
-                Telegram
-                <span className="tech-side-online">online</span>
+          <a href="https://t.me/kwtd6v">
+            <div className="tech-side-block">
+              <span className="tech-side-status">
+                <TelegramIcon />
+                <span className="tech-side-labels">
+                  Telegram
+                  <span className="tech-side-online">online</span>
+                </span>
               </span>
-            </span>
+            </div>
           </a>
+
         </section>
       </div>
     
@@ -120,7 +114,7 @@ function App() {
             </div>
             <div className="project-card">
               <div style={{display:'flex',alignItems:'center',gap:'0.5em',marginBottom:'0.5rem'}}>
-                <span className="icon"><BotStickerCopy width={30} height={30}/></span>
+                <span className="icon"><BotStickerCopy width={30} height={30} /></span>
                 <h4 className="accent" style={{margin:0}}>processing-calc</h4>
               </div>
               <p>JavaScript calculator for data processing.</p>
