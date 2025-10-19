@@ -15,7 +15,7 @@ const CommercialProposal = () => {
           <div className="hero-content">
             <div class="hero-title">
             <div className="kicker">Коммерческое предложение</div>
-            <div className="subtitle">Fullstack разработчик с 3-летним стажем — быстрые, минималистичные сайты и продуктовые интерфейсы. Широкий спектр возможностей и навыков: полный цикл разработки, деплой и поддержка.</div>
+            <div className="subtitle">Fullstack разработчик с 3-летним стажем. Быстрые, минималистичные сайты и продуктовые интерфейсы. Полный цикл разработки, деплой и поддержка.</div>
             </div>
             <div className="section">
               <h2 id="services">Навыки</h2>
@@ -50,38 +50,38 @@ const CommercialProposal = () => {
             </div>
 
             <div className="section">
-              <h2>Предложение по созданию сайта для производства лодок Vivat Boat</h2>
+              <h2>Предложение по созданию сайта Vivat Boat</h2>
               <div className="project-plan">
                 <div className="plan-section">
                   <h3>Структура сайта (6 страниц)</h3>
                   <div className="plan-grid">
                     <div className="plan-item">
                       <h4>Главная</h4>
-                      <p>Презентация бренда и ключевых моделей лодок, акцент на качество и преимущества</p>
+                      <p>Презентация бренда и ключевых моделей</p>
                     </div>
                     <div className="plan-item">
                       <h4>О компании</h4>
-                      <p>Информация о верфи, истории и производственных мощностях</p>
+                      <p>История верфи и производственные мощности</p>
                     </div>
                     <div className="plan-item">
                       <h4>Каталог лодок</h4>
-                      <p>Полный перечень моделей с фильтрацией по типу, размеру и комплектации</p>
+                      <p>Модели с фильтрацией по типу и размеру</p>
                     </div>
                     <div className="plan-item expandable">
                       <h4>Конструктор лодок</h4>
-                      <p>Интерактивный модуль выбора модели, комплектации, цвета с визуализацией</p>
+                      <p>Интерактивный выбор модели и комплектации</p>
                       <details>
                         <summary>Подробнее</summary>
-                        <p>Пользователь выбирает модель, комплектацию, цвет и видит визуализацию лодки. Итоговая стоимость отображается для справки, без возможности онлайн-оплаты.</p>
+                        <p>Выбор модели, комплектации, цвета с визуализацией и расчетом стоимости</p>
                       </details>
                     </div>
                     <div className="plan-item">
                       <h4>Контакты</h4>
-                      <p>Форма «Заказать звонок» и карта с расположением верфи</p>
+                      <p>Форма заказа звонка и карта</p>
                     </div>
                     <div className="plan-item">
                       <h4>Партнеры</h4>
-                      <p>Информация о партнерах и дилерах</p>
+                      <p>Информация о дилерах</p>
                     </div>
                   </div>
                 </div>
@@ -99,11 +99,11 @@ const CommercialProposal = () => {
                     </div>
                     <div className="plan-item">
                       <h4>Дизайн</h4>
-                      <p>Индивидуальный современный дизайн по запросу клиента</p>
+                      <p>Индивидуальный современный дизайн</p>
                     </div>
                     <div className="plan-item">
                       <h4>Формы обратной связи</h4>
-                      <p>Заказ звонка и отправка заявки</p>
+                      <p>Заказ звонка и заявки</p>
                     </div>
                   </div>
                 </div>
@@ -112,10 +112,10 @@ const CommercialProposal = () => {
                   <h3>Технологии разработки</h3>
                   <div className="tech-stack">
                     <div className="tech-item">
-                      <strong>Frontend:</strong> TypeScript + React, адаптивный и современный интерфейс
+                      <strong>Frontend:</strong> TypeScript + React, адаптивный интерфейс
                     </div>
                     <div className="tech-item">
-                      <strong>Backend:</strong> Node.js, с возможностью последующего расширения функционала
+                      <strong>Backend:</strong> Node.js с возможностью расширения
                     </div>
                   </div>
                 </div>
@@ -128,7 +128,7 @@ const CommercialProposal = () => {
                 <div className="timeline-item">
                   <div className="timeline-content">
                     <h3>Сроки разработки</h3>
-                    <p>Полный цикл — до 2 недель, включая тестирование и развёртывание</p>
+                    <p>Полный цикл — до 2 недель</p>
                   </div>
                 </div>
                 <div className="timeline-item">
@@ -142,7 +142,7 @@ const CommercialProposal = () => {
 
             <div className="section">
               <h2>Условия оплаты</h2>
-              <div className="payment">50% предоплата, 50% по завершении проекта (возможна гибкая схема).</div>
+              <div className="payment">50% предоплата, 50% по завершении проекта</div>
             </div>
           </div>
 
