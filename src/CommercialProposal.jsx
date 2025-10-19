@@ -23,7 +23,7 @@ const CommercialProposal = () => {
                 <div className="muted">• Интеграция платежных систем (Stripe, PayPal, Яндекс.Касса)</div>
                 <div className="muted">• Создание каталогов товаров и услуг</div>
                 <div className="muted">• Система регистрации и авторизации пользователей</div>
-                <div className="muted">• Разработка Telegram ботов и автоматизация</div>
+                <div className="muted">• Разработка Telegram-ботов и автоматизация</div>
               </div>
             </div>
 
@@ -142,15 +142,15 @@ const CommercialProposal = () => {
 
             <div className="section">
               <h2>Условия оплаты</h2>
-              <div className="payment">50% предоплата, 50% по завершении проекта</div>
+              <div className="payment">50% предоплата, 50% по завершению проекта</div>
             </div>
           </div>
 
         </section>
 
         <footer>
-          <div>KWTPUB — студия разработки и дизайна</div>
-          <div>Рыбин Тимофей Вячеславович • timofei@kwtpub.dev</div>
+          <div>KWTPUB</div>
+          <div>Рыбин Тимофей Вячеславович</div>
         </footer>
       </div>
     </div>
