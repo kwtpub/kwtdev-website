@@ -215,6 +215,24 @@ footer {
   header {
     padding: 6px;
   }
+  .wrap {
+    margin: 20px auto;
+    padding: 20px;
+  }
+  .hero {
+    padding: 30px 10px 20px;
+  }
+  .cooperation-flow {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .plan-grid {
+    grid-template-columns: 1fr;
+  }
+  .timeline-cost {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 @media (max-width: 520px) {
@@ -224,6 +242,71 @@ footer {
   .hero {
     flex-direction: column;
     align-items: flex-start;
+    padding: 20px 10px;
+  }
+  .wrap {
+    margin: 10px auto;
+    padding: 15px;
+  }
+  .kicker {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    font-size: 16px;
+    margin-top: 8px;
+  }
+  .section {
+    margin-top: 24px;
+    padding: 15px 0;
+  }
+  .section h2 {
+    font-size: 18px;
+  }
+  .section h3 {
+    font-size: 16px;
+  }
+  .flow-card {
+    padding: 16px;
+  }
+  .flow-card h3 {
+    font-size: 14px;
+  }
+  .flow-card p {
+    font-size: 12px;
+  }
+  .plan-item {
+    padding: 16px;
+  }
+  .plan-item h4 {
+    font-size: 14px;
+  }
+  .plan-item p {
+    font-size: 12px;
+  }
+  .timeline-item {
+    padding: 16px;
+  }
+  .timeline-content h3 {
+    font-size: 14px;
+  }
+  .timeline-content p {
+    font-size: 12px;
+  }
+  .tech-item {
+    padding: 12px;
+    font-size: 12px;
+  }
+  .payment {
+    font-size: 14px;
+  }
+  footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    font-size: 11px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
   }
 }
 
