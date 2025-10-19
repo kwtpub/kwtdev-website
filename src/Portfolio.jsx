@@ -85,30 +85,104 @@ function Portfolio() {
       </div>
     
 
-      {/* Cooperation Process Section */}
-      <section className="projects">
-        <div className="projects-container projects-border-label">
-          <h2 className="projects-label">Порядок сотрудничества</h2>
-          <div className="cooperation-flow">
-            <div className="flow-card">
-              <h3>ЗАЯВКА</h3>
-              <p>Оформите заявку на разработку или пришлите нам ваше техническое задание</p>
-            </div>
-            <div className="flow-card">
-              <h3>ПРЕДЛОЖЕНИЕ РЕШЕНИЯ</h3>
-              <p>Разработаем индивидуальное предложение, учитывая требования, и посчитаем стоимость</p>
-            </div>
-            <div className="flow-card">
-              <h3>СОГЛАСОВАНИЕ И РАЗРАБОТКА</h3>
-              <p>После согласования условий мы организуем разработку, контролируя качество и соблюдение сроков</p>
-            </div>
-            <div className="flow-card">
-              <h3>СОПРОВОЖДЕНИЕ И ПОДДЕРЖКА</h3>
-              <p>Даём гарантию на качество нашей работы и готовы решать любые возможные вопросы за Вас</p>
-            </div>
-          </div>
-        </div>
-      </section>
+             {/* Portfolio Section */}
+             <section className="projects">
+               <div className="projects-container projects-border-label">
+                 <h2 className="projects-label">Портфолио</h2>
+                 <div className="portfolio-grid">
+                   <div className="portfolio-item">
+                     <h3>JWT Authentication</h3>
+                     <p>Система аутентификации с JWT токенами на Node.js. Включает регистрацию, авторизацию и защищенные маршруты.</p>
+                     <div className="portfolio-links">
+                       <a href="https://github.com/kwtpub/JWT-authentication" target="_blank" rel="noopener noreferrer" className="github-btn">
+                         <GithubIcon />
+                         GitHub
+                       </a>
+                     </div>
+                   </div>
+                   
+                   <div className="portfolio-item">
+                     <h3>Book Library</h3>
+                     <p>Веб-приложение для управления библиотекой книг с современным интерфейсом и функционалом каталогизации.</p>
+                     <div className="portfolio-links">
+                       <a href="https://github.com/kwtpub/book-library" target="_blank" rel="noopener noreferrer" className="github-btn">
+                         <GithubIcon />
+                         GitHub
+                       </a>
+                     </div>
+                   </div>
+                   
+                   <div className="portfolio-item">
+                     <h3>Tommy Sinny Password</h3>
+                     <p>Сайт для получения паролей с современным дизайном и интуитивным интерфейсом.</p>
+                     <div className="portfolio-links">
+                       <a href="https://tommysinny.com/password" target="_blank" rel="noopener noreferrer" className="github-btn">
+                         <GithubIcon />
+                         Сайт
+                       </a>
+                     </div>
+                   </div>
+                   
+                   <div className="portfolio-item">
+                     <h3>DYU TOYS</h3>
+                     <p>Интернет-магазин арт-игрушек с каталогом товаров, корзиной покупок и системой оформления заказов.</p>
+                     <div className="portfolio-links">
+                       <a href="https://dyutoys.ru" target="_blank" rel="noopener noreferrer" className="github-btn">
+                         <GithubIcon />
+                         Сайт
+                       </a>
+                     </div>
+                   </div>
+                   
+                   <div className="portfolio-item">
+                     <h3>Tyler Thompson</h3>
+                     <p>Портфолио-сайт с современным дизайном и адаптивной версткой для демонстрации работ.</p>
+                     <div className="portfolio-links">
+                       <a href="https://tylerthompson.ru" target="_blank" rel="noopener noreferrer" className="github-btn">
+                         <GithubIcon />
+                         Сайт
+                       </a>
+                     </div>
+                   </div>
+                   
+                   <div className="portfolio-item">
+                     <h3>My Active To-Do</h3>
+                     <p>Приложение для управления задачами с интуитивным интерфейсом и возможностью отслеживания прогресса.</p>
+                     <div className="portfolio-links">
+                       <a href="https://github.com/kwtpub/my-active-to-d" target="_blank" rel="noopener noreferrer" className="github-btn">
+                         <GithubIcon />
+                         GitHub
+                       </a>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </section>
+
+             {/* Cooperation Process Section */}
+             <section className="projects">
+               <div className="projects-container projects-border-label">
+                 <h2 className="projects-label">Порядок сотрудничества</h2>
+                 <div className="cooperation-flow">
+                   <div className="flow-card">
+                     <h3>ЗАЯВКА</h3>
+                     <p>Оформите заявку на разработку или пришлите нам ваше техническое задание</p>
+                   </div>
+                   <div className="flow-card">
+                     <h3>ПРЕДЛОЖЕНИЕ РЕШЕНИЯ</h3>
+                     <p>Разработаем индивидуальное предложение, учитывая требования, и посчитаем стоимость</p>
+                   </div>
+                   <div className="flow-card">
+                     <h3>СОГЛАСОВАНИЕ И РАЗРАБОТКА</h3>
+                     <p>После согласования условий мы организуем разработку, контролируя качество и соблюдение сроков</p>
+                   </div>
+                   <div className="flow-card">
+                     <h3>СОПРОВОЖДЕНИЕ И ПОДДЕРЖКА</h3>
+                     <p>Даём гарантию на качество нашей работы и готовы решать любые возможные вопросы за Вас</p>
+                   </div>
+                 </div>
+               </div>
+             </section>
 
       {/* Footer */}
       <footer className="footer">

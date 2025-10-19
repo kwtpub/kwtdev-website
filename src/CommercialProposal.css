@@ -228,6 +228,33 @@ footer {
   .hero {
     padding: 30px 10px 20px;
   }
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .portfolio-item {
+    padding: 16px;
+  }
+  
+  .portfolio-item h3 {
+    font-size: 14px;
+  }
+  
+  .portfolio-item p {
+    font-size: 12px;
+  }
+  
+  .github-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  
+  .github-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+  
   .cooperation-flow {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -329,6 +356,72 @@ footer {
   border-radius: 999px;
   color: #07100a;
   font-weight: 800;
+}
+
+/* Portfolio Styles */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.portfolio-item {
+  background: rgba(255,255,255,0.02);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.portfolio-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+
+.portfolio-item h3 {
+  color: #efe9e0;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.portfolio-item p {
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0 0 12px;
+}
+
+.portfolio-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.github-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.1);
+  color: #efe9e0;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.github-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.github-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
 }
 
 /* Cooperation Flow Styles */

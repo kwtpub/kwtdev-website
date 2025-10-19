@@ -1,5 +1,6 @@
 import React from 'react';
 import './CommercialProposal.css';
+import GithubIcon from './components/GithubIcon';
 
 const CommercialProposal = () => {
   return (
@@ -24,6 +25,77 @@ const CommercialProposal = () => {
                 <div className="muted">• Создание каталогов товаров и услуг</div>
                 <div className="muted">• Система регистрации и авторизации пользователей</div>
                 <div className="muted">• Разработка Telegram-ботов и автоматизация</div>
+              </div>
+            </div>
+
+            <div className="section">
+              <h2>Портфолио</h2>
+              <div className="portfolio-grid">
+                <div className="portfolio-item">
+                  <h3>JWT Authentication</h3>
+                  <p>Современная безопасная аутентификация с JWT токенами на Node.js. Включает регистрацию, авторизацию, защищенные маршруты, хеширование паролей, middleware для проверки токенов и обновление токенов доступа.</p>
+                  <div className="portfolio-links">
+                    <a href="https://github.com/kwtpub/JWT-authentication" target="_blank" rel="noopener noreferrer" className="github-btn">
+                      <GithubIcon />
+                      GitHub
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="portfolio-item">
+                  <h3>Book Library</h3>
+                  <p>Веб-приложение для управления библиотекой книг с современным интерфейсом и функционалом каталогизации.</p>
+                  <div className="portfolio-links">
+                    <a href="https://github.com/kwtpub/book-library" target="_blank" rel="noopener noreferrer" className="github-btn">
+                      <GithubIcon />
+                      GitHub
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="portfolio-item">
+                  <h3>Tommy Sinny</h3>
+                  <p>Сайт бренда с уникальным дизайном. Современный интерфейс для получения паролей с креативным подходом к визуальному оформлению и интуитивной навигацией.</p>
+                  <div className="portfolio-links">
+                    <a href="https://tommysinny.com/password" target="_blank" rel="noopener noreferrer" className="github-btn">
+                      <GithubIcon />
+                      Сайт
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="portfolio-item">
+                  <h3>DYU TOYS</h3>
+                  <p>Интернет-магазин арт-игрушек на CMS Tilda с кастомным каталогом и уникальным дизайном. Разработан специальный функционал для Tilda с интеграцией платежных систем и системой управления заказами.</p>
+                  <div className="portfolio-links">
+                    <a href="https://dyutoys.ru" target="_blank" rel="noopener noreferrer" className="github-btn">
+                      <GithubIcon />
+                      Сайт
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="portfolio-item">
+                  <h3>Tyler Thompson</h3>
+                  <p>На этом сайте детальная проработка карточки товара с уникальными доработками функционала. Современный дизайн с адаптивной версткой и интерактивными элементами для демонстрации товаров.</p>
+                  <div className="portfolio-links">
+                    <a href="https://tylerthompson.ru/ultraarmorjacketv2" target="_blank" rel="noopener noreferrer" className="github-btn">
+                      <GithubIcon />
+                      Сайт
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="portfolio-item">
+                  <h3>My Active To-Do</h3>
+                  <p>Минималистичный удобный to-do. Приложение для управления задачами с чистым интерфейсом, интуитивной навигацией и возможностью отслеживания прогресса.</p>
+                  <div className="portfolio-links">
+                    <a href="https://github.com/kwtpub/my-active-to-d" target="_blank" rel="noopener noreferrer" className="github-btn">
+                      <GithubIcon />
+                      GitHub
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
 
