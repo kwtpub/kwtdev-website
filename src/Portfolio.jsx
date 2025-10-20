@@ -103,9 +103,9 @@ function Portfolio() {
                    
                    <div className="portfolio-item">
                      <h3>Book Library</h3>
-                     <p>Веб-приложение для управления библиотекой книг с современным интерфейсом и функционалом каталогизации.</p>
+                     <p>Веб-приложение с самописным движком. Для опросмотра работы обязательно введите что-то в поиск</p>
                      <div className="portfolio-links">
-                       <a href="https://github.com/kwtpub/book-library" target="_blank" rel="noopener noreferrer" className="github-btn">
+                       <a href="https://book-library11.netlify.app" target="_blank" rel="noopener noreferrer" className="github-btn">
                          <GithubIcon />
                          GitHub
                        </a>
@@ -138,7 +138,7 @@ function Portfolio() {
                      <h3>My Active To-Do</h3>
                      <p>Приложение для управления задачами с интуитивным интерфейсом и возможностью отслеживания прогресса.</p>
                      <div className="portfolio-links">
-                       <a href="https://github.com/kwtpub/my-active-to-d" target="_blank" rel="noopener noreferrer" className="github-btn">
+                       <a href="https://to-do-kwt.netlify.app" target="_blank" rel="noopener noreferrer" className="github-btn">
                          <GithubIcon />
                          GitHub
                        </a>
