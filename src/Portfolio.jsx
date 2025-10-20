@@ -47,9 +47,9 @@ function Portfolio() {
             <BotSticker width={110} height={110} />
             <div className="hero-main-content">
               <div className="hero-title-row">
-                <h1>STUDIO <span className="accent">KWTPUB</span></h1>
+                <h1>KWTPUB</h1>
               </div>
-              <p className="desc">Fullstack разработчик с 3-летним стажем — быстрые, минималистичные сайты и продуктовые интерфейсы. Широкий спектр возможностей и навыков: полный цикл разработки, деплой и поддержка.</p>
+              <p className="desc">Fullstack разработчик с 3х-летним стажем — быстрые, минималистичные сайты и продуктовые интерфейсы. Широкий спектр возможностей и навыков: полный цикл разработки, деплой и поддержка.</p>
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@ function Portfolio() {
                    </div>
                    
                    <div className="portfolio-item">
-                     <h3>Tommy Sinny Password</h3>
+                     <h3>Tommy Sinny</h3>
                      <p>Сайт для получения паролей с современным дизайном и интуитивным интерфейсом.</p>
                      <div className="portfolio-links">
                        <a href="https://tommysinny.com/password" target="_blank" rel="noopener noreferrer" className="github-btn">
@@ -128,17 +128,6 @@ function Portfolio() {
                      <p>Интернет-магазин арт-игрушек с каталогом товаров, корзиной покупок и системой оформления заказов.</p>
                      <div className="portfolio-links">
                        <a href="https://dyutoys.ru" target="_blank" rel="noopener noreferrer" className="github-btn">
-                         <GithubIcon />
-                         Сайт
-                       </a>
-                     </div>
-                   </div>
-                   
-                   <div className="portfolio-item">
-                     <h3>Tyler Thompson</h3>
-                     <p>Портфолио-сайт с современным дизайном и адаптивной версткой для демонстрации работ.</p>
-                     <div className="portfolio-links">
-                       <a href="https://tylerthompson.ru" target="_blank" rel="noopener noreferrer" className="github-btn">
                          <GithubIcon />
                          Сайт
                        </a>
@@ -166,19 +155,19 @@ function Portfolio() {
                  <div className="cooperation-flow">
                    <div className="flow-card">
                      <h3>ЗАЯВКА</h3>
-                     <p>Оформите заявку на разработку или пришлите нам ваше техническое задание</p>
+                     <p>Оформите заявку<br/> на разработку.</p>
                    </div>
                    <div className="flow-card">
                      <h3>ПРЕДЛОЖЕНИЕ РЕШЕНИЯ</h3>
-                     <p>Разработаем индивидуальное предложение, учитывая требования, и посчитаем стоимость</p>
+                     <p>Получите оффер.</p>
                    </div>
                    <div className="flow-card">
                      <h3>СОГЛАСОВАНИЕ И РАЗРАБОТКА</h3>
-                     <p>После согласования условий мы организуем разработку, контролируя качество и соблюдение сроков</p>
+                     <p>Получите возможнось контролировать создание сайта на всех этапах его разработки.</p>
                    </div>
                    <div className="flow-card">
-                     <h3>СОПРОВОЖДЕНИЕ И ПОДДЕРЖКА</h3>
-                     <p>Даём гарантию на качество нашей работы и готовы решать любые возможные вопросы за Вас</p>
+                     <h3>ГАРАНТИЯ<br/> НА РАЗРАБОТКА</h3>
+                     <p>В случии возникновния ошибок, получите бесплатную тех поддержку.</p>
                    </div>
                  </div>
                </div>
