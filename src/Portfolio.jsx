@@ -25,7 +25,7 @@ function Portfolio() {
     <div className="portfolio-root">
       <div className="hero-icons-top">
         <div className="hero-avatar-top">
-          <img src="https://res.cloudinary.com/dhx2rvn4s/image/upload/v1751044969/Pngtree_mountain_logo_design_vector_5286636_fqpzrl.jpg" alt="avatar" width={56} height={56} style={{objectFit: 'cover', borderRadius: 16}} />
+          <img src="https://res.cloudinary.com/dhx2rvn4s/image/upload/v1751044969/Pngtree_mountain_logo_design_vector_5286636_fqpzrl.jpg" alt="avatar" width={32} height={32} style={{objectFit: 'cover', borderRadius: 8}} />
         </div>
         <a href="https://github.com/kwtpub" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
           <span className="icon"><GithubIcon /></span>
