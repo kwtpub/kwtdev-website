@@ -8,9 +8,7 @@ const CommercialProposal = () => {
       <div className="wrap">
         <header>
           <div className="logo">KWTPUB</div>
-          
         </header>
-
         <section className="hero">
           <div className="hero-content">
             <div class="hero-title">
@@ -25,6 +23,10 @@ const CommercialProposal = () => {
                 <div className="muted">• Система регистрации и авторизации пользователей</div>
                 <div className="muted">• Разработка Telegram-ботов и автоматизация</div>
               </div>
+            </div>
+
+            <div class="section">
+              <button>Прайс лист</button>
             </div>
 
             <div className="section">
