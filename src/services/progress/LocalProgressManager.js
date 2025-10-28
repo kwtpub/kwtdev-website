@@ -1,105 +1,47 @@
-import { getStore } from '@netlify/blobs';
 import { TopicProgress } from './TopicProgress.js';
 import { RepetitionScheduler } from './RepetitionScheduler.js';
 
 /**
- * Главный класс для управления прогрессом обучения
+ * Альтернативный класс для управления прогрессом обучения (только localStorage)
+ * Используется когда Netlify Blobs вызывают проблемы
  */
-export class ProgressManager {
+export class LocalProgressManager {
   constructor() {
     this.scheduler = new RepetitionScheduler();
     this.topics = new Map();
     this.isInitialized = false;
-    this.store = null;
-    
-    // Инициализируем хранилище с правильными параметрами
-    this.initializeStore();
+    this.storageKey = 'learning-progress';
   }
 
   /**
-   * Инициализация хранилища с параметрами
-   */
-  initializeStore() {
-    try {
-      // Получаем параметры из переменных окружения
-      const siteID = import.meta.env.VITE_NETLIFY_SITE_ID || process.env.NETLIFY_SITE_ID;
-      const token = import.meta.env.VITE_NETLIFY_BLOBS_TOKEN || process.env.NETLIFY_BLOBS_TOKEN;
-      
-      // Проверяем, что мы в браузере и есть необходимые параметры
-      if (typeof window !== 'undefined' && siteID && token) {
-        try {
-          this.store = getStore({
-            name: 'learning-progress',
-            siteID: siteID,
-            token: token
-          });
-          console.log('✅ Netlify Blobs инициализированы с параметрами');
-        } catch (blobsError) {
-          console.warn('⚠️ Ошибка создания Netlify Blobs store:', blobsError);
-          this.store = null;
-        }
-      } else {
-        console.warn('⚠️ Параметры Netlify Blobs не найдены или не в браузере, используем localStorage');
-        this.store = null;
-      }
-    } catch (error) {
-      console.error('❌ Ошибка инициализации Netlify Blobs:', error);
-      this.store = null;
-    }
-  }
-
-  /**
-   * Инициализация - загрузка данных из хранилища
+   * Инициализация - загрузка данных из localStorage
    */
   async initialize() {
     if (this.isInitialized) return;
     
     try {
-      // Проверяем доступность Blobs
-      if (!this.store) {
-        console.warn('Netlify Blobs не настроены, используем localStorage');
-        this.loadFromLocalStorage();
-        this.isInitialized = true;
-        return;
-      }
-
-      // Пытаемся загрузить данные из Blobs с таймаутом
-      const data = await Promise.race([
-        this.store.get('topics'),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout')), 5000)
-        )
-      ]);
-      
-      if (data) {
-        const topicsData = JSON.parse(data);
-        topicsData.forEach(topicData => {
-          const topic = TopicProgress.fromJSON(topicData);
-          this.topics.set(topic.topicId, topic);
-        });
-        console.log('✅ Данные загружены из Netlify Blobs');
-      }
-      this.isInitialized = true;
-    } catch (error) {
-      console.error('Ошибка загрузки данных прогресса:', error);
-      // Fallback на localStorage
       this.loadFromLocalStorage();
+      this.isInitialized = true;
+      console.log('✅ LocalProgressManager инициализирован с localStorage');
+    } catch (error) {
+      console.error('Ошибка инициализации LocalProgressManager:', error);
       this.isInitialized = true;
     }
   }
 
   /**
-   * Fallback на localStorage для локальной разработки
+   * Загрузка данных из localStorage
    */
   loadFromLocalStorage() {
     try {
-      const data = localStorage.getItem('learning-progress');
+      const data = localStorage.getItem(this.storageKey);
       if (data) {
         const topicsData = JSON.parse(data);
         topicsData.forEach(topicData => {
           const topic = TopicProgress.fromJSON(topicData);
           this.topics.set(topic.topicId, topic);
         });
+        console.log(`✅ Загружено ${topicsData.length} тем из localStorage`);
       }
     } catch (error) {
       console.error('Ошибка загрузки из localStorage:', error);
@@ -107,42 +49,15 @@ export class ProgressManager {
   }
 
   /**
-   * Сохранение данных в хранилище
+   * Сохранение данных в localStorage
    */
   async save() {
     try {
       const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
-      
-      if (this.store) {
-        // Используем Netlify Blobs с таймаутом
-        try {
-          await Promise.race([
-            this.store.set('topics', JSON.stringify(topicsData)),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Save timeout')), 5000)
-            )
-          ]);
-          console.log('✅ Данные сохранены в Netlify Blobs');
-        } catch (blobsError) {
-          console.warn('⚠️ Ошибка сохранения в Blobs, используем localStorage:', blobsError);
-          // Fallback на localStorage
-          localStorage.setItem('learning-progress', JSON.stringify(topicsData));
-        }
-      } else {
-        // Используем localStorage
-        localStorage.setItem('learning-progress', JSON.stringify(topicsData));
-        console.log('✅ Данные сохранены в localStorage');
-      }
+      localStorage.setItem(this.storageKey, JSON.stringify(topicsData));
+      console.log('✅ Данные сохранены в localStorage');
     } catch (error) {
-      console.error('Ошибка сохранения данных прогресса:', error);
-      // Последний fallback на localStorage
-      try {
-        const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
-        localStorage.setItem('learning-progress', JSON.stringify(topicsData));
-        console.log('✅ Данные сохранены в localStorage (fallback)');
-      } catch (localError) {
-        console.error('Ошибка сохранения в localStorage:', localError);
-      }
+      console.error('Ошибка сохранения в localStorage:', error);
     }
   }
 

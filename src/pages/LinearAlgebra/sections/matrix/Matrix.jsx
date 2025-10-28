@@ -1,11 +1,11 @@
 import '../../../../App.css'
 import HeaderIcons from '../../../../components/HeaderIcons';
 import './Matrix.css'
-import { ProgressManager } from '../../../../services/progress';
+import { createProgressManager } from '../../../../services/progress';
 import { useState, useEffect } from 'react';
 
 function Matrix() {
-  const [progressManager] = useState(() => new ProgressManager());
+  const [progressManager] = useState(() => createProgressManager());
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
