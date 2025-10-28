@@ -6,10 +6,28 @@ import { getStore } from '@netlify/blobs';
 async function testBlobs() {
   console.log('🔍 Тестирование Netlify Blobs...');
   
+  // Получаем параметры из переменных окружения
+  const siteID = process.env.VITE_NETLIFY_SITE_ID || process.env.NETLIFY_SITE_ID;
+  const token = process.env.VITE_NETLIFY_BLOBS_TOKEN || process.env.NETLIFY_BLOBS_TOKEN;
+  
+  if (!siteID || !token) {
+    console.error('❌ Не найдены параметры Netlify Blobs:');
+    console.log('   VITE_NETLIFY_SITE_ID:', siteID ? '✅' : '❌');
+    console.log('   VITE_NETLIFY_BLOBS_TOKEN:', token ? '✅' : '❌');
+    console.log('\n💡 Создайте файл .env.local с параметрами:');
+    console.log('   VITE_NETLIFY_SITE_ID=ваш-site-id');
+    console.log('   VITE_NETLIFY_BLOBS_TOKEN=ваш-blobs-token');
+    return;
+  }
+  
   try {
-    // Создаем хранилище
-    const store = getStore('learning-progress');
-    console.log('✅ Хранилище создано:', store);
+    // Создаем хранилище с параметрами
+    const store = getStore({
+      name: 'learning-progress',
+      siteID: siteID,
+      token: token
+    });
+    console.log('✅ Хранилище создано с параметрами');
     
     // Тест записи
     console.log('📝 Тестируем запись...');
@@ -36,7 +54,7 @@ async function testBlobs() {
     console.error('❌ Ошибка при тестировании Blobs:', error);
     console.log('\n💡 Возможные решения:');
     console.log('1. Убедитесь, что проект связан с Netlify: netlify link');
-    console.log('2. Проверьте переменную окружения NETLIFY_BLOBS_TOKEN');
+    console.log('2. Проверьте переменные окружения VITE_NETLIFY_SITE_ID и VITE_NETLIFY_BLOBS_TOKEN');
     console.log('3. Убедитесь, что Blobs включены в настройках сайта');
     console.log('4. Используйте netlify dev для локальной разработки');
   }

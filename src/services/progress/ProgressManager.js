@@ -7,11 +7,39 @@ import { RepetitionScheduler } from './RepetitionScheduler.js';
  */
 export class ProgressManager {
   constructor() {
-    // Используем имя хранилища из конфигурации
-    this.store = getStore('learning-progress');
     this.scheduler = new RepetitionScheduler();
     this.topics = new Map();
     this.isInitialized = false;
+    this.store = null;
+    
+    // Инициализируем хранилище с правильными параметрами
+    this.initializeStore();
+  }
+
+  /**
+   * Инициализация хранилища с параметрами
+   */
+  initializeStore() {
+    try {
+      // Получаем параметры из переменных окружения
+      const siteID = import.meta.env.VITE_NETLIFY_SITE_ID || process.env.NETLIFY_SITE_ID;
+      const token = import.meta.env.VITE_NETLIFY_BLOBS_TOKEN || process.env.NETLIFY_BLOBS_TOKEN;
+      
+      if (siteID && token) {
+        this.store = getStore({
+          name: 'learning-progress',
+          siteID: siteID,
+          token: token
+        });
+        console.log('✅ Netlify Blobs инициализированы с параметрами');
+      } else {
+        console.warn('⚠️ Параметры Netlify Blobs не найдены, используем localStorage');
+        this.store = null;
+      }
+    } catch (error) {
+      console.error('❌ Ошибка инициализации Netlify Blobs:', error);
+      this.store = null;
+    }
   }
 
   /**
