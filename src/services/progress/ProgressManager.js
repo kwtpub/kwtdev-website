@@ -7,16 +7,28 @@ import { RepetitionScheduler } from './RepetitionScheduler.js';
  */
 export class ProgressManager {
   constructor() {
+    // Используем имя хранилища из конфигурации
     this.store = getStore('learning-progress');
     this.scheduler = new RepetitionScheduler();
     this.topics = new Map();
+    this.isInitialized = false;
   }
 
   /**
    * Инициализация - загрузка данных из хранилища
    */
   async initialize() {
+    if (this.isInitialized) return;
+    
     try {
+      // Проверяем доступность Blobs
+      if (!this.store) {
+        console.warn('Netlify Blobs не настроены, используем localStorage');
+        this.loadFromLocalStorage();
+        this.isInitialized = true;
+        return;
+      }
+
       const data = await this.store.get('topics');
       if (data) {
         const topicsData = JSON.parse(data);
@@ -25,8 +37,30 @@ export class ProgressManager {
           this.topics.set(topic.topicId, topic);
         });
       }
+      this.isInitialized = true;
     } catch (error) {
       console.error('Ошибка загрузки данных прогресса:', error);
+      // Fallback на localStorage
+      this.loadFromLocalStorage();
+      this.isInitialized = true;
+    }
+  }
+
+  /**
+   * Fallback на localStorage для локальной разработки
+   */
+  loadFromLocalStorage() {
+    try {
+      const data = localStorage.getItem('learning-progress');
+      if (data) {
+        const topicsData = JSON.parse(data);
+        topicsData.forEach(topicData => {
+          const topic = TopicProgress.fromJSON(topicData);
+          this.topics.set(topic.topicId, topic);
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки из localStorage:', error);
     }
   }
 
@@ -36,9 +70,23 @@ export class ProgressManager {
   async save() {
     try {
       const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
-      await this.store.set('topics', JSON.stringify(topicsData));
+      
+      if (this.store) {
+        // Используем Netlify Blobs
+        await this.store.set('topics', JSON.stringify(topicsData));
+      } else {
+        // Fallback на localStorage
+        localStorage.setItem('learning-progress', JSON.stringify(topicsData));
+      }
     } catch (error) {
       console.error('Ошибка сохранения данных прогресса:', error);
+      // Fallback на localStorage
+      try {
+        const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
+        localStorage.setItem('learning-progress', JSON.stringify(topicsData));
+      } catch (localError) {
+        console.error('Ошибка сохранения в localStorage:', localError);
+      }
     }
   }
 
