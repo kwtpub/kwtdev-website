@@ -98,6 +98,19 @@ function Matrix() {
     }
   };
 
+  // ВРЕМЕННАЯ функция для сброса прогресса (удалить после обновления)
+  const handleResetProgress = async () => {
+    if (window.confirm('⚠️ Это сбросит весь прогресс и обновит структуру данных. Продолжить?')) {
+      try {
+        await progressManager.resetAll();
+        console.log('✅ Прогресс сброшен. Перезагрузка...');
+        window.location.reload();
+      } catch (error) {
+        console.error('❌ Ошибка сброса:', error);
+      }
+    }
+  };
+
   const getStatusText = (status) => {
     switch(status) {
       case 'completed': return 'Завершено'
