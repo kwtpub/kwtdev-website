@@ -125,9 +125,9 @@ export class ProgressManager {
   /**
    * Создать или получить тему
    */
-  getOrCreateTopic(topicId, topicName, totalLessons = 0) {
+  getOrCreateTopic(topicId, topicName, totalLessons = 0, subTopics = []) {
     if (!this.topics.has(topicId)) {
-      const topic = new TopicProgress(topicId, topicName, totalLessons);
+      const topic = new TopicProgress(topicId, topicName, totalLessons, subTopics);
       this.topics.set(topicId, topic);
       this.save(); // Автосохранение
     }
@@ -176,6 +176,30 @@ export class ProgressManager {
   async uncompleteRepetition(topicId, interval) {
     const topic = this.topics.get(topicId);
     if (topic && topic.uncompleteRepetition(interval)) {
+      await this.save();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Переключить теорию подпункта
+   */
+  async toggleSubTopicTheory(topicId, subTopicId) {
+    const topic = this.topics.get(topicId);
+    if (topic && topic.toggleSubTopicTheory(subTopicId)) {
+      await this.save();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Переключить практику подпункта
+   */
+  async toggleSubTopicPractice(topicId, subTopicId) {
+    const topic = this.topics.get(topicId);
+    if (topic && topic.toggleSubTopicPractice(subTopicId)) {
       await this.save();
       return true;
     }

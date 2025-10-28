@@ -16,17 +16,27 @@ function Matrix() {
       try {
         await progressManager.initialize();
         
-        // Создаем темы если их нет (totalLessons = 6 интервалов повторений)
+        // Создаем темы если их нет (totalLessons = 4 интервала повторений)
         const topicConfigs = [
-          { id: 1, name: 'Основы матриц', description: 'Определение, типы и основные операции' },
-          { id: 2, name: 'Умножение матриц', description: 'Правила и алгоритмы умножения' },
-          { id: 3, name: 'Определители', description: 'Вычисление определителей различных порядков' },
-          { id: 4, name: 'Обратные матрицы', description: 'Нахождение обратной матрицы' }
+          {
+            id: 1,
+            name: 'Матрицы и действия над ними',
+            description: 'Определение, типы и основные операции',
+            subTopics: [
+              { id: '1-1', name: 'Основные понятия' },
+              { id: '1-2', name: 'Операции над матрицами' },
+              { id: '1-3', name: 'Свойства операций' },
+              { id: '1-4', name: 'Матричная форма записи системы лин. уравнений' }
+            ]
+          },
+          { id: 2, name: 'Умножение матриц', description: 'Правила и алгоритмы умножения', subTopics: [] },
+          { id: 3, name: 'Определители', description: 'Вычисление определителей различных порядков', subTopics: [] },
+          { id: 4, name: 'Обратные матрицы', description: 'Нахождение обратной матрицы', subTopics: [] }
         ];
 
         topicConfigs.forEach(config => {
-          // totalLessons = 6 (количество интервалов повторений)
-          progressManager.getOrCreateTopic(config.id, config.name, 6);
+          // totalLessons = 4 (количество интервалов повторений)
+          progressManager.getOrCreateTopic(config.id, config.name, 4, config.subTopics);
         });
 
         const topicsData = progressManager.getDisplayData();
@@ -65,6 +75,26 @@ function Matrix() {
       }
     } catch (error) {
       console.error('❌ Ошибка изменения повторения:', error);
+    }
+  };
+
+  const handleToggleSubTopicTheory = async (topicId, subTopicId) => {
+    try {
+      await progressManager.toggleSubTopicTheory(topicId, subTopicId);
+      const updatedTopics = progressManager.getDisplayData();
+      setTopics(updatedTopics);
+    } catch (error) {
+      console.error('❌ Ошибка изменения теории:', error);
+    }
+  };
+
+  const handleToggleSubTopicPractice = async (topicId, subTopicId) => {
+    try {
+      await progressManager.toggleSubTopicPractice(topicId, subTopicId);
+      const updatedTopics = progressManager.getDisplayData();
+      setTopics(updatedTopics);
+    } catch (error) {
+      console.error('❌ Ошибка изменения практики:', error);
     }
   };
 
@@ -187,6 +217,37 @@ function Matrix() {
                   ))}
                 </div>
               </div>
+
+              {topic.subTopics && topic.subTopics.length > 0 && (
+                <div className="subtopics-section">
+                  <h4 className="subtopics-title">Подпункты темы</h4>
+                  <div className="subtopics-list">
+                    {topic.subTopics.map((subTopic) => (
+                      <div key={subTopic.id} className="subtopic-item">
+                        <div className="subtopic-name">{subTopic.name}</div>
+                        <div className="subtopic-checkboxes">
+                          <button
+                            className={`subtopic-checkbox ${subTopic.theory.completed ? 'checked' : ''}`}
+                            onClick={() => handleToggleSubTopicTheory(topic.id, subTopic.id)}
+                            title="Теория"
+                          >
+                            <span className="checkbox-icon">{subTopic.theory.completed ? '✓' : ''}</span>
+                            <span className="checkbox-label">Теория</span>
+                          </button>
+                          <button
+                            className={`subtopic-checkbox ${subTopic.practice.completed ? 'checked' : ''}`}
+                            onClick={() => handleToggleSubTopicPractice(topic.id, subTopic.id)}
+                            title="Практика"
+                          >
+                            <span className="checkbox-icon">{subTopic.practice.completed ? '✓' : ''}</span>
+                            <span className="checkbox-label">Практика</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>

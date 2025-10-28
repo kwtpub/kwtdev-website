@@ -2,7 +2,7 @@
  * Класс для управления прогрессом отдельной темы
  */
 export class TopicProgress {
-  constructor(topicId, topicName, totalLessons = 0) {
+  constructor(topicId, topicName, totalLessons = 0, subTopics = []) {
     this.topicId = topicId;
     this.topicName = topicName;
     this.totalLessons = totalLessons;
@@ -14,6 +14,13 @@ export class TopicProgress {
       week1: { completed: false, completedAt: null },
       month1: { completed: false, completedAt: null }
     };
+    // Подпункты темы (не влияют на основной прогресс)
+    this.subTopics = subTopics.map(st => ({
+      id: st.id,
+      name: st.name,
+      theory: { completed: false, completedAt: null },
+      practice: { completed: false, completedAt: null }
+    }));
     this.createdAt = new Date().toISOString();
     this.updatedAt = new Date().toISOString();
   }
@@ -102,6 +109,34 @@ export class TopicProgress {
     // Общее количество интервалов = totalLessons
     const totalIntervals = Object.keys(this.repetitions).length;
     this.totalLessons = totalIntervals;
+  }
+
+  /**
+   * Переключить теорию подпункта
+   */
+  toggleSubTopicTheory(subTopicId) {
+    const subTopic = this.subTopics.find(st => st.id === subTopicId);
+    if (subTopic) {
+      subTopic.theory.completed = !subTopic.theory.completed;
+      subTopic.theory.completedAt = subTopic.theory.completed ? new Date().toISOString() : null;
+      this.updatedAt = new Date().toISOString();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Переключить практику подпункта
+   */
+  toggleSubTopicPractice(subTopicId) {
+    const subTopic = this.subTopics.find(st => st.id === subTopicId);
+    if (subTopic) {
+      subTopic.practice.completed = !subTopic.practice.completed;
+      subTopic.practice.completedAt = subTopic.practice.completed ? new Date().toISOString() : null;
+      this.updatedAt = new Date().toISOString();
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -197,6 +232,7 @@ export class TopicProgress {
           key: 'month1'
         }
       ],
+      subTopics: this.subTopics,
       needsRepetition: this.needsRepetition(),
       nextInterval: this.getNextRepetitionInterval()
     };
@@ -213,6 +249,7 @@ export class TopicProgress {
       completedLessons: this.completedLessons,
       lastStudied: this.lastStudied,
       repetitions: this.repetitions,
+      subTopics: this.subTopics,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     };
@@ -222,10 +259,11 @@ export class TopicProgress {
    * Десериализация из сохраненных данных
    */
   static fromJSON(data) {
-    const topic = new TopicProgress(data.topicId, data.topicName, data.totalLessons);
+    const topic = new TopicProgress(data.topicId, data.topicName, data.totalLessons, []);
     topic.completedLessons = data.completedLessons || 0;
     topic.lastStudied = data.lastStudied;
     topic.repetitions = data.repetitions || topic.repetitions;
+    topic.subTopics = data.subTopics || [];
     topic.createdAt = data.createdAt || topic.createdAt;
     topic.updatedAt = data.updatedAt || topic.updatedAt;
     return topic;
