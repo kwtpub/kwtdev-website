@@ -3,7 +3,7 @@ import { TopicProgress } from './TopicProgress.js';
 import { RepetitionScheduler } from './RepetitionScheduler.js';
 
 /**
- * Главный класс для управления прогрессом обучения
+ * Главный класс для управления прогрессом обучения (только Netlify Blobs)
  */
 export class ProgressManager {
   constructor() {
@@ -40,125 +40,78 @@ export class ProgressManager {
             throw new Error('Fetch API недоступен');
           }
         } catch (blobsError) {
-          console.warn('⚠️ Ошибка создания Netlify Blobs store:', blobsError);
-          console.log('🔄 Переключаемся на localStorage из-за проблем с Blobs');
-          this.store = null;
+          console.error('❌ Ошибка создания Netlify Blobs store:', blobsError);
+          throw new Error('Netlify Blobs недоступны');
         }
       } else {
-        console.warn('⚠️ Параметры Netlify Blobs не найдены или не в браузере, используем localStorage');
-        this.store = null;
+        console.error('❌ Параметры Netlify Blobs не найдены');
+        throw new Error('Необходимы параметры VITE_NETLIFY_SITE_ID и VITE_NETLIFY_BLOBS_TOKEN');
       }
     } catch (error) {
       console.error('❌ Ошибка инициализации Netlify Blobs:', error);
-      this.store = null;
+      throw error;
     }
   }
 
   /**
-   * Инициализация - загрузка данных из хранилища
+   * Инициализация - загрузка данных из Blobs
    */
   async initialize() {
     if (this.isInitialized) return;
     
-    try {
-      // Проверяем доступность Blobs
-      if (!this.store) {
-        console.warn('Netlify Blobs не настроены, используем localStorage');
-        this.loadFromLocalStorage();
-        this.isInitialized = true;
-        return;
-      }
-
-      // Пытаемся загрузить данные из Blobs с улучшенной обработкой ошибок
-      try {
-        const data = await Promise.race([
-          this.store.get('topics'),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Blobs timeout')), 3000)
-          )
-        ]);
-        
-        if (data) {
-          const topicsData = JSON.parse(data);
-          topicsData.forEach(topicData => {
-            const topic = TopicProgress.fromJSON(topicData);
-            this.topics.set(topic.topicId, topic);
-          });
-          console.log('✅ Данные загружены из Netlify Blobs');
-        }
-      } catch (blobsError) {
-        console.warn('⚠️ Ошибка загрузки из Blobs, переключаемся на localStorage:', blobsError.message);
-        // Отключаем Blobs для будущих операций
-        this.store = null;
-        this.loadFromLocalStorage();
-      }
-      
-      this.isInitialized = true;
-    } catch (error) {
-      console.error('Ошибка инициализации ProgressManager:', error);
-      // Fallback на localStorage
-      this.loadFromLocalStorage();
-      this.isInitialized = true;
+    if (!this.store) {
+      throw new Error('Netlify Blobs не инициализированы');
     }
-  }
 
-  /**
-   * Fallback на localStorage для локальной разработки
-   */
-  loadFromLocalStorage() {
     try {
-      const data = localStorage.getItem('learning-progress');
+      // Загружаем данные из Blobs
+      const data = await Promise.race([
+        this.store.get('topics'),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Blobs timeout')), 5000)
+        )
+      ]);
+      
       if (data) {
         const topicsData = JSON.parse(data);
         topicsData.forEach(topicData => {
           const topic = TopicProgress.fromJSON(topicData);
           this.topics.set(topic.topicId, topic);
         });
+        console.log(`✅ Загружено ${topicsData.length} тем из Netlify Blobs`);
+      } else {
+        console.log('📝 Данных в Blobs нет, начинаем с пустого состояния');
       }
+      
+      this.isInitialized = true;
     } catch (error) {
-      console.error('Ошибка загрузки из localStorage:', error);
+      console.error('❌ Ошибка загрузки данных из Blobs:', error);
+      throw error;
     }
   }
 
   /**
-   * Сохранение данных в хранилище
+   * Сохранение данных в Blobs
    */
   async save() {
+    if (!this.store) {
+      throw new Error('Netlify Blobs не инициализированы');
+    }
+
     try {
       const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
       
-      if (this.store) {
-        // Используем Netlify Blobs с улучшенной обработкой ошибок
-        try {
-          await Promise.race([
-            this.store.set('topics', JSON.stringify(topicsData)),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Blobs save timeout')), 3000)
-            )
-          ]);
-          console.log('✅ Данные сохранены в Netlify Blobs');
-        } catch (blobsError) {
-          console.warn('⚠️ Ошибка сохранения в Blobs, переключаемся на localStorage:', blobsError.message);
-          // Отключаем Blobs для будущих операций
-          this.store = null;
-          localStorage.setItem('learning-progress', JSON.stringify(topicsData));
-          console.log('✅ Данные сохранены в localStorage (fallback)');
-        }
-      } else {
-        // Используем localStorage
-        localStorage.setItem('learning-progress', JSON.stringify(topicsData));
-        console.log('✅ Данные сохранены в localStorage');
-      }
+      await Promise.race([
+        this.store.set('topics', JSON.stringify(topicsData)),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Blobs save timeout')), 5000)
+        )
+      ]);
+      
+      console.log('✅ Данные сохранены в Netlify Blobs');
     } catch (error) {
-      console.error('Ошибка сохранения данных прогресса:', error);
-      // Последний fallback на localStorage
-      try {
-        const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
-        localStorage.setItem('learning-progress', JSON.stringify(topicsData));
-        console.log('✅ Данные сохранены в localStorage (final fallback)');
-      } catch (localError) {
-        console.error('Ошибка сохранения в localStorage:', localError);
-      }
+      console.error('❌ Ошибка сохранения данных в Blobs:', error);
+      throw error;
     }
   }
 

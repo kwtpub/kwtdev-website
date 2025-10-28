@@ -13,26 +13,32 @@ function Matrix() {
   // Инициализация данных
   useEffect(() => {
     const initializeData = async () => {
-      await progressManager.initialize();
-      
-      // Создаем темы если их нет
-      const topicConfigs = [
-        { id: 1, name: 'Основы матриц', description: 'Определение, типы и основные операции', totalLessons: 5 },
-        { id: 2, name: 'Умножение матриц', description: 'Правила и алгоритмы умножения', totalLessons: 8 },
-        { id: 3, name: 'Определители', description: 'Вычисление определителей различных порядков', totalLessons: 6 },
-        { id: 4, name: 'Обратные матрицы', description: 'Нахождение обратной матрицы', totalLessons: 7 }
-      ];
+      try {
+        await progressManager.initialize();
+        
+        // Создаем темы если их нет
+        const topicConfigs = [
+          { id: 1, name: 'Основы матриц', description: 'Определение, типы и основные операции', totalLessons: 5 },
+          { id: 2, name: 'Умножение матриц', description: 'Правила и алгоритмы умножения', totalLessons: 8 },
+          { id: 3, name: 'Определители', description: 'Вычисление определителей различных порядков', totalLessons: 6 },
+          { id: 4, name: 'Обратные матрицы', description: 'Нахождение обратной матрицы', totalLessons: 7 }
+        ];
 
-      topicConfigs.forEach(config => {
-        progressManager.getOrCreateTopic(config.id, config.name, config.totalLessons);
-      });
+        topicConfigs.forEach(config => {
+          progressManager.getOrCreateTopic(config.id, config.name, config.totalLessons);
+        });
 
-      const topicsData = progressManager.getDisplayData();
-      const statsData = progressManager.getStats();
-      
-      setTopics(topicsData);
-      setStats(statsData);
-      setLoading(false);
+        const topicsData = progressManager.getDisplayData();
+        const statsData = progressManager.getStats();
+        
+        setTopics(topicsData);
+        setStats(statsData);
+        setLoading(false);
+      } catch (error) {
+        console.error('❌ Ошибка инициализации ProgressManager:', error);
+        setLoading(false);
+        // Можно показать пользователю сообщение об ошибке
+      }
     };
 
     initializeData();
@@ -40,22 +46,30 @@ function Matrix() {
 
   // Обработчики действий
   const handleCompleteLesson = async (topicId) => {
-    const success = await progressManager.completeLesson(topicId);
-    if (success) {
-      const updatedTopics = progressManager.getDisplayData();
-      const updatedStats = progressManager.getStats();
-      setTopics(updatedTopics);
-      setStats(updatedStats);
+    try {
+      const success = await progressManager.completeLesson(topicId);
+      if (success) {
+        const updatedTopics = progressManager.getDisplayData();
+        const updatedStats = progressManager.getStats();
+        setTopics(updatedTopics);
+        setStats(updatedStats);
+      }
+    } catch (error) {
+      console.error('❌ Ошибка завершения урока:', error);
     }
   };
 
   const handleCompleteRepetition = async (topicId, interval) => {
-    const success = await progressManager.completeRepetition(topicId, interval);
-    if (success) {
-      const updatedTopics = progressManager.getDisplayData();
-      const updatedStats = progressManager.getStats();
-      setTopics(updatedTopics);
-      setStats(updatedStats);
+    try {
+      const success = await progressManager.completeRepetition(topicId, interval);
+      if (success) {
+        const updatedTopics = progressManager.getDisplayData();
+        const updatedStats = progressManager.getStats();
+        setTopics(updatedTopics);
+        setStats(updatedStats);
+      }
+    } catch (error) {
+      console.error('❌ Ошибка завершения повторения:', error);
     }
   };
 
