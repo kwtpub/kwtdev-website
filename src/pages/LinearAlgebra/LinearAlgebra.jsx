@@ -2,13 +2,54 @@
 import '../../App.css'
 import HeaderIcons from '../../components/HeaderIcons';
 import './LinearAlgebra.css'
+import { useState, useEffect } from 'react';
+import { createProgressManager } from '../../services/progress';
 
 function LinearAlgebra() {
+  const [progressManager] = useState(() => createProgressManager());
+  const [matrixProgress, setMatrixProgress] = useState({ progress: 0, totalLessons: 0, completedLessons: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadProgress = async () => {
+      try {
+        await progressManager.initialize();
+        
+        // Получаем все топики и считаем общий прогресс для Matrix
+        const allTopics = progressManager.getAllTopics();
+        const totalTopics = allTopics.length;
+        const completedIntervals = allTopics.reduce((sum, topic) => sum + topic.completedLessons, 0);
+        const totalIntervals = allTopics.reduce((sum, topic) => sum + topic.totalLessons, 0);
+        const overallProgress = totalIntervals > 0 ? Math.round((completedIntervals / totalIntervals) * 100) : 0;
+        
+        setMatrixProgress({
+          progress: overallProgress,
+          totalLessons: totalTopics,
+          completedLessons: allTopics.filter(t => t.completedLessons === t.totalLessons).length
+        });
+        
+        setLoading(false);
+      } catch (error) {
+        console.error('❌ Ошибка загрузки прогресса:', error);
+        setLoading(false);
+      }
+    };
+    
+    loadProgress();
+  }, [progressManager]);
+
   const sections = [
-    {id: 1, name: 'Matrix', link: 'matrix', progress: 75, totalLessons: 12, completedLessons: 9},
-    {id: 2, name: 'Vectors', link: 'vectors', progress: 45, totalLessons: 8, completedLessons: 3},
-    {id: 3, name: 'Determinants', link: 'determinants', progress: 20, totalLessons: 6, completedLessons: 1},
-    {id: 4, name: 'Linear Transformations', link: 'transformations', progress: 0, totalLessons: 10, completedLessons: 0},
+    {
+      id: 1, 
+      name: 'Matrix', 
+      link: 'matrix', 
+      progress: matrixProgress.progress, 
+      totalLessons: matrixProgress.totalLessons, 
+      completedLessons: matrixProgress.completedLessons
+    },
+    {id: 2, name: 'Vectors', link: 'vectors', progress: 0, totalLessons: 0, completedLessons: 0},
+    {id: 3, name: 'Determinants', link: 'determinants', progress: 0, totalLessons: 0, completedLessons: 0},
+    {id: 4, name: 'Linear Transformations', link: 'transformations', progress: 0, totalLessons: 0, completedLessons: 0},
   ]
 
   return (
@@ -17,6 +58,10 @@ function LinearAlgebra() {
       <div className="title-contaiter">
         <h2>Трекер обучения</h2>
         <h4 className="description-title">Применяя кривую Эббингауза</h4>
+        
+        {loading && (
+          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '20px' }}>Загрузка прогресса...</p>
+        )}
         
         <div className="sections-container">
           {sections.map((section) => (
