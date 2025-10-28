@@ -8,6 +8,7 @@ import { createProgressManager } from '../../services/progress';
 function LinearAlgebra() {
   const [progressManager] = useState(() => createProgressManager());
   const [matrixProgress, setMatrixProgress] = useState({ progress: 0, totalLessons: 0, completedLessons: 0 });
+  const [vectorsProgress, setVectorsProgress] = useState({ progress: 0, totalLessons: 0, completedLessons: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,17 +16,33 @@ function LinearAlgebra() {
       try {
         await progressManager.initialize();
         
-        // Получаем все топики и считаем общий прогресс для Matrix
+        // Получаем все топики
         const allTopics = progressManager.getAllTopics();
-        const totalTopics = allTopics.length;
-        const completedIntervals = allTopics.reduce((sum, topic) => sum + topic.completedLessons, 0);
-        const totalIntervals = allTopics.reduce((sum, topic) => sum + topic.totalLessons, 0);
-        const overallProgress = totalIntervals > 0 ? Math.round((completedIntervals / totalIntervals) * 100) : 0;
+        
+        // Фильтруем топики по Matrix (id: 1-5) и Vectors (id: v1-v4)
+        const matrixTopics = allTopics.filter(t => typeof t.topicId === 'number');
+        const vectorsTopics = allTopics.filter(t => typeof t.topicId === 'string' && t.topicId.startsWith('v'));
+        
+        // Считаем прогресс для Matrix
+        const matrixCompletedIntervals = matrixTopics.reduce((sum, topic) => sum + topic.completedLessons, 0);
+        const matrixTotalIntervals = matrixTopics.reduce((sum, topic) => sum + topic.totalLessons, 0);
+        const matrixOverallProgress = matrixTotalIntervals > 0 ? Math.round((matrixCompletedIntervals / matrixTotalIntervals) * 100) : 0;
         
         setMatrixProgress({
-          progress: overallProgress,
-          totalLessons: totalTopics,
-          completedLessons: allTopics.filter(t => t.completedLessons === t.totalLessons).length
+          progress: matrixOverallProgress,
+          totalLessons: matrixTopics.length,
+          completedLessons: matrixTopics.filter(t => t.completedLessons === t.totalLessons).length
+        });
+        
+        // Считаем прогресс для Vectors
+        const vectorsCompletedIntervals = vectorsTopics.reduce((sum, topic) => sum + topic.completedLessons, 0);
+        const vectorsTotalIntervals = vectorsTopics.reduce((sum, topic) => sum + topic.totalLessons, 0);
+        const vectorsOverallProgress = vectorsTotalIntervals > 0 ? Math.round((vectorsCompletedIntervals / vectorsTotalIntervals) * 100) : 0;
+        
+        setVectorsProgress({
+          progress: vectorsOverallProgress,
+          totalLessons: vectorsTopics.length,
+          completedLessons: vectorsTopics.filter(t => t.completedLessons === t.totalLessons).length
         });
         
         setLoading(false);
@@ -47,7 +64,14 @@ function LinearAlgebra() {
       totalLessons: matrixProgress.totalLessons, 
       completedLessons: matrixProgress.completedLessons
     },
-    {id: 2, name: 'Vectors', link: 'vectors', progress: 0, totalLessons: 0, completedLessons: 0},
+    {
+      id: 2, 
+      name: 'Vectors', 
+      link: 'vectors', 
+      progress: vectorsProgress.progress, 
+      totalLessons: vectorsProgress.totalLessons, 
+      completedLessons: vectorsProgress.completedLessons
+    },
     {id: 3, name: 'Determinants', link: 'determinants', progress: 0, totalLessons: 0, completedLessons: 0},
     {id: 4, name: 'Linear Transformations', link: 'transformations', progress: 0, totalLessons: 0, completedLessons: 0},
   ]
