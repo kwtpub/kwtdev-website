@@ -75,8 +75,18 @@ function Vectors() {
           progressManager.getOrCreateTopic(config.id, config.name, 4, config.subTopics);
         });
 
-        const topicsData = progressManager.getDisplayData();
-        const statsData = progressManager.getStats();
+        // Получаем только темы по векторам (id начинается с 'v')
+        const allTopics = progressManager.getAllTopics();
+        const vectorsTopics = allTopics.filter(t => typeof t.topicId === 'string' && t.topicId.startsWith('v'));
+        const topicsData = vectorsTopics.map(t => t.getDisplayData());
+        
+        // Считаем статистику только для тем по векторам
+        const statsData = {
+          total: vectorsTopics.length,
+          completed: vectorsTopics.filter(t => t.completedLessons === t.totalLessons).length,
+          inProgress: vectorsTopics.filter(t => t.completedLessons > 0 && t.completedLessons < t.totalLessons).length,
+          readyForRepetition: vectorsTopics.filter(t => t.needsRepetition()).length
+        };
         
         setTopics(topicsData);
         setStats(statsData);
@@ -101,8 +111,16 @@ function Vectors() {
       }
       
       if (success) {
-        const updatedTopics = progressManager.getDisplayData();
-        const updatedStats = progressManager.getStats();
+        // Получаем только темы по векторам
+        const allTopics = progressManager.getAllTopics();
+        const vectorsTopics = allTopics.filter(t => typeof t.topicId === 'string' && t.topicId.startsWith('v'));
+        const updatedTopics = vectorsTopics.map(t => t.getDisplayData());
+        const updatedStats = {
+          total: vectorsTopics.length,
+          completed: vectorsTopics.filter(t => t.completedLessons === t.totalLessons).length,
+          inProgress: vectorsTopics.filter(t => t.completedLessons > 0 && t.completedLessons < t.totalLessons).length,
+          readyForRepetition: vectorsTopics.filter(t => t.needsRepetition()).length
+        };
         setTopics(updatedTopics);
         setStats(updatedStats);
       }
@@ -114,7 +132,9 @@ function Vectors() {
   const handleToggleSubTopicTheory = async (topicId, subTopicId) => {
     try {
       await progressManager.toggleSubTopicTheory(topicId, subTopicId);
-      const updatedTopics = progressManager.getDisplayData();
+      const allTopics = progressManager.getAllTopics();
+      const vectorsTopics = allTopics.filter(t => typeof t.topicId === 'string' && t.topicId.startsWith('v'));
+      const updatedTopics = vectorsTopics.map(t => t.getDisplayData());
       setTopics(updatedTopics);
     } catch (error) {
       console.error('❌ Ошибка изменения теории:', error);
@@ -124,7 +144,9 @@ function Vectors() {
   const handleToggleSubTopicPractice = async (topicId, subTopicId) => {
     try {
       await progressManager.toggleSubTopicPractice(topicId, subTopicId);
-      const updatedTopics = progressManager.getDisplayData();
+      const allTopics = progressManager.getAllTopics();
+      const vectorsTopics = allTopics.filter(t => typeof t.topicId === 'string' && t.topicId.startsWith('v'));
+      const updatedTopics = vectorsTopics.map(t => t.getDisplayData());
       setTopics(updatedTopics);
     } catch (error) {
       console.error('❌ Ошибка изменения практики:', error);

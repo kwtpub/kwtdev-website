@@ -61,8 +61,18 @@ function Calculus() {
           progressManager.getOrCreateTopic(config.id, config.name, 4, config.subTopics);
         });
 
-        const topicsData = progressManager.getDisplayData();
-        const statsData = progressManager.getStats();
+        // Получаем только темы по математическому анализу (id начинается с 'c')
+        const allTopics = progressManager.getAllTopics();
+        const calculusTopics = allTopics.filter(t => typeof t.topicId === 'string' && t.topicId.startsWith('c'));
+        const topicsData = calculusTopics.map(t => t.getDisplayData());
+        
+        // Считаем статистику только для тем матанализа
+        const statsData = {
+          total: calculusTopics.length,
+          completed: calculusTopics.filter(t => t.completedLessons === t.totalLessons).length,
+          inProgress: calculusTopics.filter(t => t.completedLessons > 0 && t.completedLessons < t.totalLessons).length,
+          readyForRepetition: calculusTopics.filter(t => t.needsRepetition()).length
+        };
         
         setTopics(topicsData);
         setStats(statsData);
@@ -87,8 +97,16 @@ function Calculus() {
       }
       
       if (success) {
-        const updatedTopics = progressManager.getDisplayData();
-        const updatedStats = progressManager.getStats();
+        // Получаем только темы по матанализу
+        const allTopics = progressManager.getAllTopics();
+        const calculusTopics = allTopics.filter(t => typeof t.topicId === 'string' && t.topicId.startsWith('c'));
+        const updatedTopics = calculusTopics.map(t => t.getDisplayData());
+        const updatedStats = {
+          total: calculusTopics.length,
+          completed: calculusTopics.filter(t => t.completedLessons === t.totalLessons).length,
+          inProgress: calculusTopics.filter(t => t.completedLessons > 0 && t.completedLessons < t.totalLessons).length,
+          readyForRepetition: calculusTopics.filter(t => t.needsRepetition()).length
+        };
         setTopics(updatedTopics);
         setStats(updatedStats);
       }

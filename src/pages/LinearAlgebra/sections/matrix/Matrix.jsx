@@ -74,8 +74,18 @@ function Matrix() {
           progressManager.getOrCreateTopic(config.id, config.name, 4, config.subTopics);
         });
 
-        const topicsData = progressManager.getDisplayData();
-        const statsData = progressManager.getStats();
+        // Получаем только темы по матрицам (id - числа от 1 до 5)
+        const allTopics = progressManager.getAllTopics();
+        const matrixTopics = allTopics.filter(t => typeof t.topicId === 'number');
+        const topicsData = matrixTopics.map(t => t.getDisplayData());
+        
+        // Считаем статистику только для тем по матрицам
+        const statsData = {
+          total: matrixTopics.length,
+          completed: matrixTopics.filter(t => t.completedLessons === t.totalLessons).length,
+          inProgress: matrixTopics.filter(t => t.completedLessons > 0 && t.completedLessons < t.totalLessons).length,
+          readyForRepetition: matrixTopics.filter(t => t.needsRepetition()).length
+        };
         
         setTopics(topicsData);
         setStats(statsData);
@@ -103,8 +113,16 @@ function Matrix() {
       }
       
       if (success) {
-        const updatedTopics = progressManager.getDisplayData();
-        const updatedStats = progressManager.getStats();
+        // Получаем только темы по матрицам
+        const allTopics = progressManager.getAllTopics();
+        const matrixTopics = allTopics.filter(t => typeof t.topicId === 'number');
+        const updatedTopics = matrixTopics.map(t => t.getDisplayData());
+        const updatedStats = {
+          total: matrixTopics.length,
+          completed: matrixTopics.filter(t => t.completedLessons === t.totalLessons).length,
+          inProgress: matrixTopics.filter(t => t.completedLessons > 0 && t.completedLessons < t.totalLessons).length,
+          readyForRepetition: matrixTopics.filter(t => t.needsRepetition()).length
+        };
         setTopics(updatedTopics);
         setStats(updatedStats);
       }
@@ -116,7 +134,9 @@ function Matrix() {
   const handleToggleSubTopicTheory = async (topicId, subTopicId) => {
     try {
       await progressManager.toggleSubTopicTheory(topicId, subTopicId);
-      const updatedTopics = progressManager.getDisplayData();
+      const allTopics = progressManager.getAllTopics();
+      const matrixTopics = allTopics.filter(t => typeof t.topicId === 'number');
+      const updatedTopics = matrixTopics.map(t => t.getDisplayData());
       setTopics(updatedTopics);
     } catch (error) {
       console.error('❌ Ошибка изменения теории:', error);
@@ -126,7 +146,9 @@ function Matrix() {
   const handleToggleSubTopicPractice = async (topicId, subTopicId) => {
     try {
       await progressManager.toggleSubTopicPractice(topicId, subTopicId);
-      const updatedTopics = progressManager.getDisplayData();
+      const allTopics = progressManager.getAllTopics();
+      const matrixTopics = allTopics.filter(t => typeof t.topicId === 'number');
+      const updatedTopics = matrixTopics.map(t => t.getDisplayData());
       setTopics(updatedTopics);
     } catch (error) {
       console.error('❌ Ошибка изменения практики:', error);
