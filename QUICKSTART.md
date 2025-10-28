@@ -28,8 +28,8 @@
 3. Добавьте:
 
 ```
-SITE_ID = ваш-site-id
-NETLIFY_BLOBS_TOKEN = ваш-token
+VITE_NETLIFY_SITE_ID = ваш-site-id
+VITE_NETLIFY_BLOBS_TOKEN = ваш-token
 ```
 
 ## 2. Передеплойте сайт

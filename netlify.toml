@@ -11,5 +11,5 @@
 
 # ВАЖНО: Переменные окружения настраиваются в Netlify Dashboard
 # Site settings → Environment variables
-# Нужны: NETLIFY_BLOBS_TOKEN, SITE_ID
+# Нужны: VITE_NETLIFY_SITE_ID, VITE_NETLIFY_BLOBS_TOKEN
 # Не храните токены в этом файле!

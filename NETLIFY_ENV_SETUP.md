@@ -42,20 +42,18 @@
 4. Добавьте две переменные:
 
 ```
-Key: SITE_ID
+Key: VITE_NETLIFY_SITE_ID
 Value: ваш-site-id (например: c1fb9773-760d-45d2-afef-b71816c8e0a5)
 Scopes: ✅ Production ✅ Deploy Previews ✅ Branch deploys
 ```
 
 ```
-Key: NETLIFY_BLOBS_TOKEN
+Key: VITE_NETLIFY_BLOBS_TOKEN
 Value: ваш-токен
 Scopes: ✅ Production ✅ Deploy Previews ✅ Branch deploys
 ```
 
 5. Нажмите **Save**
-
-**Важно:** Не используйте префикс `VITE_` для этих переменных - они используются в Edge Functions на сервере.
 
 ### Шаг 5: Передеплойте сайт
 
@@ -90,7 +88,7 @@ git push origin main
 
 ## Важно!
 
-- ⚠️ НЕ используйте префикс `VITE_` - переменные для Edge Functions
+- ⚠️ Используйте префикс `VITE_` для переменных
 - ⚠️ После добавления переменных обязательно передеплойте сайт
 - ⚠️ Токен показывается только при создании - сохраните его сразу
 
@@ -99,7 +97,7 @@ git push origin main
 Проверьте:
 1. В консоли браузера должно быть: `✅ Используем Netlify Blobs через Edge Function`
 2. В Netlify Dashboard → **Deploys** → последний деплой должен быть успешным
-3. В **Site settings** → **Environment** должны быть переменные `SITE_ID` и `NETLIFY_BLOBS_TOKEN`
+3. В **Site settings** → **Environment** должны быть переменные `VITE_NETLIFY_SITE_ID` и `VITE_NETLIFY_BLOBS_TOKEN`
 4. Edge Function должна быть настроена в `netlify.toml`
 
 Если видите ошибку 404 при обращении к `/api/blobs`, значит Edge Function не развернута - сделайте редеплой.

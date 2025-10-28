@@ -22,8 +22,8 @@ export default async (request, context) => {
     // Получаем store
     const store = getStore({
       name: 'learning-progress',
-      siteID: Netlify.env.get('SITE_ID'),
-      token: Netlify.env.get('NETLIFY_BLOBS_TOKEN')
+      siteID: Netlify.env.get('VITE_NETLIFY_SITE_ID'),
+      token: Netlify.env.get('VITE_NETLIFY_BLOBS_TOKEN')
     });
 
     const url = new URL(request.url);
