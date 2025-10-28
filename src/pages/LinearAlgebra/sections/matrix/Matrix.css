@@ -90,43 +90,55 @@
   margin-bottom: 25px;
 }
 
-.progress-container {
+.progress-info-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 12px;
+}
+
+.progress-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.progress-stats {
+  display: flex;
   gap: 15px;
-  margin-bottom: 10px;
+  align-items: center;
+}
+
+.progress-count {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.progress-percentage {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.progress-bar-container {
+  width: 100%;
 }
 
 .progress-bar {
-  flex: 1;
-  height: 10px;
+  width: 100%;
+  height: 12px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
+  border-radius: 6px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #ffffff, #f0f0f0);
-  border-radius: 5px;
+  border-radius: 6px;
   transition: width 0.3s ease;
-}
-
-.progress-percentage {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #ffffff;
-  min-width: 50px;
-  text-align: right;
-}
-
-.lessons-info {
-  text-align: right;
-}
-
-.lessons-text {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
 }
 
 .practice-section {
@@ -143,60 +155,87 @@
 
 .repetitions-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
-.repetition-item {
+.repetition-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  gap: 8px;
+  padding: 16px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
 }
 
-.repetition-item.completed {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.repetition-item:hover {
+.repetition-card:hover {
   background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 
-.repetition-circle {
-  width: 24px;
-  height: 24px;
+.repetition-card.completed {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.repetition-card.completed:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.repetition-icon {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.repetition-item.completed .repetition-circle {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.repetition-circle .checkmark {
-  color: white;
+  font-size: 1.5rem;
   font-weight: bold;
-  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.repetition-card.completed .repetition-icon {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+
+.repetition-card.pending .repetition-icon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.repetition-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
 }
 
 .repetition-label {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.repetition-status {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   font-weight: 500;
 }
 
-.repetition-item.completed .repetition-label {
-  color: #ffffff;
+.repetition-card.completed .repetition-status {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .stats-container {
@@ -283,6 +322,12 @@
   border-color: rgba(255, 255, 255, 0.4);
 }
 
+@media (max-width: 1024px) {
+  .repetitions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .topics-container {
     grid-template-columns: 1fr;
@@ -299,16 +344,27 @@
   }
   
   .repetitions-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .stat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
-  .complete-lesson-btn {
-    margin-left: 0;
-    margin-top: 8px;
+
+  .progress-info-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .progress-stats {
     width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .repetitions-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -45,9 +45,17 @@ function Matrix() {
   }, [progressManager]);
 
   // Обработчики действий
-  const handleCompleteLesson = async (topicId) => {
+  const handleToggleRepetition = async (topicId, interval, isCompleted) => {
     try {
-      const success = await progressManager.completeLesson(topicId);
+      let success;
+      if (isCompleted) {
+        // Если уже завершено - отменяем
+        success = await progressManager.uncompleteRepetition(topicId, interval);
+      } else {
+        // Если не завершено - завершаем
+        success = await progressManager.completeRepetition(topicId, interval);
+      }
+      
       if (success) {
         const updatedTopics = progressManager.getDisplayData();
         const updatedStats = progressManager.getStats();
@@ -55,21 +63,7 @@ function Matrix() {
         setStats(updatedStats);
       }
     } catch (error) {
-      console.error('❌ Ошибка завершения урока:', error);
-    }
-  };
-
-  const handleCompleteRepetition = async (topicId, interval) => {
-    try {
-      const success = await progressManager.completeRepetition(topicId, interval);
-      if (success) {
-        const updatedTopics = progressManager.getDisplayData();
-        const updatedStats = progressManager.getStats();
-        setTopics(updatedTopics);
-        setStats(updatedStats);
-      }
-    } catch (error) {
-      console.error('❌ Ошибка завершения повторения:', error);
+      console.error('❌ Ошибка изменения повторения:', error);
     }
   };
 
@@ -152,48 +146,43 @@ function Matrix() {
               </div>
               
               <div className="progress-section">
-                <div className="progress-container">
+                <div className="progress-info-header">
+                  <h4 className="progress-title">Прогресс повторений</h4>
+                  <div className="progress-stats">
+                    <span className="progress-count">{topic.completedLessons}/{topic.totalLessons}</span>
+                    <span className="progress-percentage">{topic.progress}%</span>
+                  </div>
+                </div>
+                <div className="progress-bar-container">
                   <div className="progress-bar">
                     <div 
                       className="progress-fill" 
                       style={{width: `${topic.progress}%`}}
                     ></div>
                   </div>
-                  <span className="progress-percentage">{topic.progress}%</span>
-                </div>
-                <div className="lessons-info">
-                  <span className="lessons-text">{topic.completedLessons}/{topic.totalLessons} уроков</span>
-                  <button 
-                    className="complete-lesson-btn"
-                    onClick={() => handleCompleteLesson(topic.id)}
-                    disabled={topic.completedLessons >= topic.totalLessons}
-                  >
-                    Завершить урок
-                  </button>
                 </div>
               </div>
 
               <div className="practice-section">
-                <h4 className="practice-title">Практика по кривой Эббингауза</h4>
+                <h4 className="practice-title">Нажмите когда выполните повторение</h4>
                 <div className="repetitions-grid">
                   {topic.repetitions.map((rep, index) => (
-                    <div 
-                      key={index} 
-                      className={`repetition-item ${rep.completed ? 'completed' : 'pending'}`}
+                    <button
+                      key={index}
+                      className={`repetition-card ${rep.completed ? 'completed' : 'pending'}`}
+                      onClick={() => handleToggleRepetition(topic.id, rep.key, rep.completed)}
+                      title={rep.completed ? 'Нажмите чтобы отменить' : 'Нажмите чтобы отметить как выполненное'}
                     >
-                      <div className="repetition-circle">
-                        {rep.completed && <span className="checkmark">✓</span>}
+                      <div className="repetition-icon">
+                        {rep.completed ? '✓' : '○'}
                       </div>
-                      <span className="repetition-label">{rep.interval}</span>
-                      {!rep.completed && topic.needsRepetition && (
-                        <button 
-                          className="complete-repetition-btn"
-                          onClick={() => handleCompleteRepetition(topic.id, rep.key)}
-                        >
-                          ✓
-                        </button>
-                      )}
-                    </div>
+                      <div className="repetition-info">
+                        <span className="repetition-label">{rep.interval}</span>
+                        <span className="repetition-status">
+                          {rep.completed ? 'Выполнено' : 'Не выполнено'}
+                        </span>
+                      </div>
+                    </button>
                   ))}
                 </div>
               </div>
