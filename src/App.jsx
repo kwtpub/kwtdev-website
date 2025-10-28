@@ -1,13 +1,13 @@
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import Portfolio from './Portfolio';
-import CommercialProposal from './CommercialProposal';
+import Portfolio from './pages/Portfolio';
+import University from './pages/University';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Portfolio />} />
-        <Route path="/commercial-proposal" element={<CommercialProposal />} />
+        <Route path="/university" element={<University/>} />
       </Routes>
     </Router>
   );

@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import lottie from 'lottie-web';
-import animationData from './assets/Comp 1.json';
+import animationData from '../assets/Awake.json';
 
-function BotStickerComp({ width = 120, height = 120 }) {
+function BotStickerCopy({ width = 120, height = 120 }) {
   const container = useRef(null);
 
   useEffect(() => {
@@ -19,4 +19,4 @@ function BotStickerComp({ width = 120, height = 120 }) {
   return <div ref={container} style={{ width, height, margin: '0 auto' }} />;
 }
 
-export default BotStickerComp; 
+export default BotStickerCopy; 

@@ -1,0 +1,25 @@
+.title-university {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.list-items-subjects {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+}
+
+.item-subject {
+  padding: 10px;
+  border: 1px solid white;
+  margin: 5px;
+  border-radius: 5px;
+  text-align: center;
+  width: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: white;
+}
