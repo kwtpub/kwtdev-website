@@ -148,6 +148,23 @@ function Matrix() {
         <h2>Матрицы</h2>
         <h4 className="description-title">Трекер обучения с практикой по кривой Эббингауза</h4>
         
+        {/* ВРЕМЕННАЯ КНОПКА - удалить после обновления структуры */}
+        <button 
+          onClick={handleResetProgress}
+          style={{
+            padding: '10px 20px',
+            marginBottom: '20px',
+            background: 'rgba(255, 100, 100, 0.2)',
+            border: '1px solid rgba(255, 100, 100, 0.5)',
+            borderRadius: '8px',
+            color: '#fff',
+            cursor: 'pointer',
+            fontSize: '0.9rem'
+          }}
+        >
+          🗑️ Сбросить прогресс (обновить структуру)
+        </button>
+        
         {stats && (
           <div className="stats-container">
             <div className="stat-card">

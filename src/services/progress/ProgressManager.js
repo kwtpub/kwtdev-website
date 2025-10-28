@@ -130,6 +130,32 @@ export class ProgressManager {
       const topic = new TopicProgress(topicId, topicName, totalLessons, subTopics);
       this.topics.set(topicId, topic);
       this.save(); // Автосохранение
+    } else {
+      // Обновляем существующий топик если изменились параметры
+      const topic = this.topics.get(topicId);
+      let needsSave = false;
+      
+      // Обновляем название если изменилось
+      if (topic.topicName !== topicName) {
+        topic.topicName = topicName;
+        needsSave = true;
+      }
+      
+      // Обновляем подпункты если их нет или они изменились
+      if (subTopics.length > 0 && (!topic.subTopics || topic.subTopics.length === 0)) {
+        topic.subTopics = subTopics.map(st => ({
+          id: st.id,
+          name: st.name,
+          theory: { completed: false, completedAt: null },
+          practice: { completed: false, completedAt: null }
+        }));
+        needsSave = true;
+      }
+      
+      if (needsSave) {
+        topic.updatedAt = new Date().toISOString();
+        this.save();
+      }
     }
     return this.topics.get(topicId);
   }
