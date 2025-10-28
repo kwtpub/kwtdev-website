@@ -39,15 +39,16 @@ export class ProgressManager {
   }
 
   /**
-   * Инициализация - загрузка данных из Blobs
+   * Инициализация - загрузка данных из Blobs или localStorage
    */
   async initialize() {
     if (this.isInitialized) return;
 
     try {
-      // Если API не доступен, работаем только в памяти
+      // Если API не доступен, пытаемся загрузить из localStorage
       if (!this.useBlobsAPI) {
-        console.log('📝 Работаем без облачного хранилища (только в памяти)');
+        console.log('📝 Загружаем из localStorage (локальная разработка)');
+        this.loadFromLocalStorage();
         this.isInitialized = true;
         return;
       }
@@ -73,24 +74,32 @@ export class ProgressManager {
           this.topics.set(topic.topicId, topic);
         });
         console.log(`✅ Загружено ${topicsData.length} тем из Netlify Blobs`);
+        
+        // Также сохраняем в localStorage как резервную копию
+        this.saveToLocalStorage();
       } else {
-        console.log('📝 Данных в Blobs нет, начинаем с пустого состояния');
+        console.log('📝 Данных в Blobs нет, проверяем localStorage...');
+        this.loadFromLocalStorage();
       }
       
       this.isInitialized = true;
     } catch (error) {
-      console.warn('⚠️ Ошибка загрузки из Blobs, работаем в памяти:', error.message);
-      this.isInitialized = true; // Продолжаем работу без облачного хранилища
+      console.warn('⚠️ Ошибка загрузки из Blobs, загружаем из localStorage:', error.message);
+      this.loadFromLocalStorage();
+      this.isInitialized = true; // Продолжаем работу с localStorage
     }
   }
 
   /**
-   * Сохранение данных в Blobs
+   * Сохранение данных в Blobs и localStorage
    */
   async save() {
-    // Если API не доступен, пропускаем сохранение
+    // Всегда сохраняем в localStorage как резервную копию
+    this.saveToLocalStorage();
+
+    // Если API не доступен, только localStorage
     if (!this.useBlobsAPI) {
-      console.log('💾 Данные хранятся только в памяти');
+      console.log('💾 Данные сохранены в localStorage');
       return;
     }
 
@@ -114,11 +123,46 @@ export class ProgressManager {
       const result = await response.json();
       
       if (result.success) {
-        console.log('✅ Данные сохранены в Netlify Blobs');
+        console.log('✅ Данные сохранены в Netlify Blobs + localStorage');
       }
     } catch (error) {
-      console.warn('⚠️ Ошибка сохранения в Blobs:', error.message);
-      // Не бросаем ошибку, данные остаются в памяти
+      console.warn('⚠️ Ошибка сохранения в Blobs, сохранено в localStorage:', error.message);
+      // Данные уже в localStorage
+    }
+  }
+
+  /**
+   * Сохранение в localStorage
+   */
+  saveToLocalStorage() {
+    try {
+      const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
+      localStorage.setItem('progress-topics', JSON.stringify(topicsData));
+      localStorage.setItem('progress-updated', new Date().toISOString());
+    } catch (error) {
+      console.warn('⚠️ Ошибка сохранения в localStorage:', error.message);
+    }
+  }
+
+  /**
+   * Загрузка из localStorage
+   */
+  loadFromLocalStorage() {
+    try {
+      const data = localStorage.getItem('progress-topics');
+      if (data) {
+        const topicsData = JSON.parse(data);
+        topicsData.forEach(topicData => {
+          const topic = TopicProgress.fromJSON(topicData);
+          this.topics.set(topic.topicId, topic);
+        });
+        const updated = localStorage.getItem('progress-updated');
+        console.log(`✅ Загружено ${topicsData.length} тем из localStorage (обновлено: ${updated})`);
+      } else {
+        console.log('📝 Нет сохраненных данных в localStorage');
+      }
+    } catch (error) {
+      console.warn('⚠️ Ошибка загрузки из localStorage:', error.message);
     }
   }
 
