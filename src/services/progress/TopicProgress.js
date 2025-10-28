@@ -61,10 +61,14 @@ export class TopicProgress {
    * Завершить повторение по интервалу
    */
   completeRepetition(interval) {
-    if (this.repetitions[interval]) {
+    if (this.repetitions[interval] && !this.repetitions[interval].completed) {
       this.repetitions[interval].completed = true;
       this.repetitions[interval].completedAt = new Date().toISOString();
       this.updatedAt = new Date().toISOString();
+      
+      // Увеличиваем счетчик завершенных уроков
+      this.updateCompletedLessons();
+      
       return true;
     }
     return false;
@@ -78,9 +82,26 @@ export class TopicProgress {
       this.repetitions[interval].completed = false;
       this.repetitions[interval].completedAt = null;
       this.updatedAt = new Date().toISOString();
+      
+      // Уменьшаем счетчик завершенных уроков
+      this.updateCompletedLessons();
+      
       return true;
     }
     return false;
+  }
+
+  /**
+   * Обновить счетчик завершенных уроков на основе повторений
+   */
+  updateCompletedLessons() {
+    // Считаем количество завершенных интервалов
+    const completedCount = Object.values(this.repetitions).filter(rep => rep.completed).length;
+    this.completedLessons = completedCount;
+    
+    // Общее количество интервалов = totalLessons
+    const totalIntervals = Object.keys(this.repetitions).length;
+    this.totalLessons = totalIntervals;
   }
 
   /**

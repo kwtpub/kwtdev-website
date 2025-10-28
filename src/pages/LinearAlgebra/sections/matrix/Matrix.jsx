@@ -16,16 +16,17 @@ function Matrix() {
       try {
         await progressManager.initialize();
         
-        // Создаем темы если их нет
+        // Создаем темы если их нет (totalLessons = 6 интервалов повторений)
         const topicConfigs = [
-          { id: 1, name: 'Основы матриц', description: 'Определение, типы и основные операции', totalLessons: 5 },
-          { id: 2, name: 'Умножение матриц', description: 'Правила и алгоритмы умножения', totalLessons: 8 },
-          { id: 3, name: 'Определители', description: 'Вычисление определителей различных порядков', totalLessons: 6 },
-          { id: 4, name: 'Обратные матрицы', description: 'Нахождение обратной матрицы', totalLessons: 7 }
+          { id: 1, name: 'Основы матриц', description: 'Определение, типы и основные операции' },
+          { id: 2, name: 'Умножение матриц', description: 'Правила и алгоритмы умножения' },
+          { id: 3, name: 'Определители', description: 'Вычисление определителей различных порядков' },
+          { id: 4, name: 'Обратные матрицы', description: 'Нахождение обратной матрицы' }
         ];
 
         topicConfigs.forEach(config => {
-          progressManager.getOrCreateTopic(config.id, config.name, config.totalLessons);
+          // totalLessons = 6 (количество интервалов повторений)
+          progressManager.getOrCreateTopic(config.id, config.name, 6);
         });
 
         const topicsData = progressManager.getDisplayData();
