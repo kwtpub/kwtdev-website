@@ -28,14 +28,20 @@ export class ProgressManager {
       // Проверяем, что мы в браузере и есть необходимые параметры
       if (typeof window !== 'undefined' && siteID && token) {
         try {
-          this.store = getStore({
-            name: 'learning-progress',
-            siteID: siteID,
-            token: token
-          });
-          console.log('✅ Netlify Blobs инициализированы с параметрами');
+          // Проверяем, что fetch доступен и работает корректно
+          if (typeof fetch === 'function') {
+            this.store = getStore({
+              name: 'learning-progress',
+              siteID: siteID,
+              token: token
+            });
+            console.log('✅ Netlify Blobs инициализированы с параметрами');
+          } else {
+            throw new Error('Fetch API недоступен');
+          }
         } catch (blobsError) {
           console.warn('⚠️ Ошибка создания Netlify Blobs store:', blobsError);
+          console.log('🔄 Переключаемся на localStorage из-за проблем с Blobs');
           this.store = null;
         }
       } else {
@@ -63,25 +69,33 @@ export class ProgressManager {
         return;
       }
 
-      // Пытаемся загрузить данные из Blobs с таймаутом
-      const data = await Promise.race([
-        this.store.get('topics'),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout')), 5000)
-        )
-      ]);
-      
-      if (data) {
-        const topicsData = JSON.parse(data);
-        topicsData.forEach(topicData => {
-          const topic = TopicProgress.fromJSON(topicData);
-          this.topics.set(topic.topicId, topic);
-        });
-        console.log('✅ Данные загружены из Netlify Blobs');
+      // Пытаемся загрузить данные из Blobs с улучшенной обработкой ошибок
+      try {
+        const data = await Promise.race([
+          this.store.get('topics'),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Blobs timeout')), 3000)
+          )
+        ]);
+        
+        if (data) {
+          const topicsData = JSON.parse(data);
+          topicsData.forEach(topicData => {
+            const topic = TopicProgress.fromJSON(topicData);
+            this.topics.set(topic.topicId, topic);
+          });
+          console.log('✅ Данные загружены из Netlify Blobs');
+        }
+      } catch (blobsError) {
+        console.warn('⚠️ Ошибка загрузки из Blobs, переключаемся на localStorage:', blobsError.message);
+        // Отключаем Blobs для будущих операций
+        this.store = null;
+        this.loadFromLocalStorage();
       }
+      
       this.isInitialized = true;
     } catch (error) {
-      console.error('Ошибка загрузки данных прогресса:', error);
+      console.error('Ошибка инициализации ProgressManager:', error);
       // Fallback на localStorage
       this.loadFromLocalStorage();
       this.isInitialized = true;
@@ -114,19 +128,21 @@ export class ProgressManager {
       const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
       
       if (this.store) {
-        // Используем Netlify Blobs с таймаутом
+        // Используем Netlify Blobs с улучшенной обработкой ошибок
         try {
           await Promise.race([
             this.store.set('topics', JSON.stringify(topicsData)),
             new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Save timeout')), 5000)
+              setTimeout(() => reject(new Error('Blobs save timeout')), 3000)
             )
           ]);
           console.log('✅ Данные сохранены в Netlify Blobs');
         } catch (blobsError) {
-          console.warn('⚠️ Ошибка сохранения в Blobs, используем localStorage:', blobsError);
-          // Fallback на localStorage
+          console.warn('⚠️ Ошибка сохранения в Blobs, переключаемся на localStorage:', blobsError.message);
+          // Отключаем Blobs для будущих операций
+          this.store = null;
           localStorage.setItem('learning-progress', JSON.stringify(topicsData));
+          console.log('✅ Данные сохранены в localStorage (fallback)');
         }
       } else {
         // Используем localStorage
@@ -139,7 +155,7 @@ export class ProgressManager {
       try {
         const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
         localStorage.setItem('learning-progress', JSON.stringify(topicsData));
-        console.log('✅ Данные сохранены в localStorage (fallback)');
+        console.log('✅ Данные сохранены в localStorage (final fallback)');
       } catch (localError) {
         console.error('Ошибка сохранения в localStorage:', localError);
       }
