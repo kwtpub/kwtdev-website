@@ -13,6 +13,12 @@ function Matrix() {
   // Инициализация данных
   useEffect(() => {
     const initializeData = async () => {
+      // Отладочная информация
+      console.log('🔍 Отладка переменных окружения:');
+      console.log('VITE_NETLIFY_SITE_ID:', import.meta.env.VITE_NETLIFY_SITE_ID);
+      console.log('VITE_NETLIFY_BLOBS_TOKEN:', import.meta.env.VITE_NETLIFY_BLOBS_TOKEN);
+      console.log('typeof window:', typeof window);
+      
       await progressManager.initialize();
       
       // Создаем темы если их нет
