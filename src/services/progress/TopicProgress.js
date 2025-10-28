@@ -39,12 +39,44 @@ export class TopicProgress {
   }
 
   /**
+   * Отменить урок (убавить прогресс)
+   */
+  uncompleteLesson() {
+    if (this.completedLessons > 0) {
+      this.completedLessons--;
+      this.updatedAt = new Date().toISOString();
+      
+      // Если уроков стало 0, сбрасываем первое повторение
+      if (this.completedLessons === 0) {
+        this.repetitions.immediate.completed = false;
+        this.repetitions.immediate.completedAt = null;
+      }
+      
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Завершить повторение по интервалу
    */
   completeRepetition(interval) {
     if (this.repetitions[interval]) {
       this.repetitions[interval].completed = true;
       this.repetitions[interval].completedAt = new Date().toISOString();
+      this.updatedAt = new Date().toISOString();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Отменить повторение по интервалу
+   */
+  uncompleteRepetition(interval) {
+    if (this.repetitions[interval] && this.repetitions[interval].completed) {
+      this.repetitions[interval].completed = false;
+      this.repetitions[interval].completedAt = null;
       this.updatedAt = new Date().toISOString();
       return true;
     }

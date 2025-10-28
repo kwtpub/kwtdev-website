@@ -147,11 +147,35 @@ export class ProgressManager {
   }
 
   /**
+   * Отменить урок (убавить прогресс)
+   */
+  async uncompleteLesson(topicId) {
+    const topic = this.topics.get(topicId);
+    if (topic && topic.uncompleteLesson()) {
+      await this.save();
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Завершить повторение
    */
   async completeRepetition(topicId, interval) {
     const topic = this.topics.get(topicId);
     if (topic && topic.completeRepetition(interval)) {
+      await this.save();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Отменить повторение
+   */
+  async uncompleteRepetition(topicId, interval) {
+    const topic = this.topics.get(topicId);
+    if (topic && topic.uncompleteRepetition(interval)) {
       await this.save();
       return true;
     }
