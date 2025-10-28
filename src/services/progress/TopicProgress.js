@@ -29,7 +29,7 @@ export class TopicProgress {
       
       // Автоматически отмечаем первое повторение как завершенное
       if (!this.repetitions.immediate.completed) {
-        this.competitions.immediate.completed = true;
+        this.repetitions.immediate.completed = true;
         this.repetitions.immediate.completedAt = new Date().toISOString();
       }
       

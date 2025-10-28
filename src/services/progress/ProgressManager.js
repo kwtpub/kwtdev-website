@@ -1,46 +1,40 @@
 import { TopicProgress } from './TopicProgress.js';
 import { RepetitionScheduler } from './RepetitionScheduler.js';
-import { getStore } from '@netlify/blobs';
 
 /**
- * Главный класс для управления прогрессом обучения (только Netlify Blobs)
+ * Главный класс для управления прогрессом обучения (только Netlify Blobs через Edge Function)
  */
 export class ProgressManager {
   constructor() {
     this.scheduler = new RepetitionScheduler();
     this.topics = new Map();
     this.isInitialized = false;
-    this.store = null;
+    this.apiUrl = '/api/blobs';
+    this.useBlobsAPI = false;
     
-    // Инициализируем хранилище с правильными параметрами
-    this.initializeStore();
+    // Проверяем доступность API
+    this.checkAPI();
   }
 
   /**
-   * Инициализация хранилища с параметрами
+   * Проверка доступности Blobs API
    */
-  initializeStore() {
+  async checkAPI() {
     try {
-      // Получаем параметры из переменных окружения
-      const siteID = import.meta.env.VITE_NETLIFY_SITE_ID;
-      const token = import.meta.env.VITE_NETLIFY_BLOBS_TOKEN;
-      
-      // Проверяем, что мы в браузере и есть необходимые параметры
-      if (typeof window !== 'undefined' && siteID && token) {
-        this.store = getStore({
-          name: 'learning-progress',
-          siteID: siteID,
-          token: token
-        });
-        console.log('✅ Netlify Blobs хранилище инициализировано');
-      } else {
-        console.warn('⚠️ Параметры Netlify Blobs не найдены, работаем без сохранения');
-        console.log('VITE_NETLIFY_SITE_ID:', siteID ? '✅' : '❌');
-        console.log('VITE_NETLIFY_BLOBS_TOKEN:', token ? '✅' : '❌');
+      if (typeof window !== 'undefined') {
+        // Проверяем, что мы не на localhost (где Edge Functions не работают)
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          console.log('📝 Локальная разработка: работаем в режиме памяти');
+          this.useBlobsAPI = false;
+        } else {
+          // На продакшене используем Edge Function API
+          this.useBlobsAPI = true;
+          console.log('✅ Используем Netlify Blobs через Edge Function');
+        }
       }
     } catch (error) {
-      console.error('❌ Ошибка инициализации Netlify Blobs:', error);
-      // Не бросаем ошибку, чтобы приложение продолжило работать
+      console.warn('⚠️ Ошибка проверки API:', error.message);
+      this.useBlobsAPI = false;
     }
   }
 
@@ -51,23 +45,29 @@ export class ProgressManager {
     if (this.isInitialized) return;
 
     try {
-      // Если хранилище не настроено, работаем только в памяти
-      if (!this.store) {
+      // Если API не доступен, работаем только в памяти
+      if (!this.useBlobsAPI) {
         console.log('📝 Работаем без облачного хранилища (только в памяти)');
         this.isInitialized = true;
         return;
       }
 
-      // Загружаем данные из Blobs
-      const data = await Promise.race([
-        this.store.get('topics', { type: 'text' }),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout')), 5000)
-        )
-      ]);
+      // Загружаем данные через Edge Function
+      const response = await fetch(`${this.apiUrl}?key=topics`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const result = await response.json();
       
-      if (data) {
-        const topicsData = JSON.parse(data);
+      if (result.success && result.data) {
+        const topicsData = JSON.parse(result.data);
         topicsData.forEach(topicData => {
           const topic = TopicProgress.fromJSON(topicData);
           this.topics.set(topic.topicId, topic);
@@ -88,23 +88,34 @@ export class ProgressManager {
    * Сохранение данных в Blobs
    */
   async save() {
-    // Если хранилище не настроено, пропускаем сохранение
-    if (!this.store) {
-      console.log('💾 Данные хранятся только в памяти (Blobs не настроен)');
+    // Если API не доступен, пропускаем сохранение
+    if (!this.useBlobsAPI) {
+      console.log('💾 Данные хранятся только в памяти');
       return;
     }
 
     try {
       const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
       
-      await Promise.race([
-        this.store.set('topics', JSON.stringify(topicsData)),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout')), 5000)
-        )
-      ]);
+      const response = await fetch(`${this.apiUrl}?key=topics`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          data: JSON.stringify(topicsData)
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const result = await response.json();
       
-      console.log('✅ Данные сохранены в Netlify Blobs');
+      if (result.success) {
+        console.log('✅ Данные сохранены в Netlify Blobs');
+      }
     } catch (error) {
       console.warn('⚠️ Ошибка сохранения в Blobs:', error.message);
       // Не бросаем ошибку, данные остаются в памяти

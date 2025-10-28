@@ -54,5 +54,5 @@ src/
 Проект автоматически деплоится на Netlify при пуше в main ветку.
 
 Убедитесь, что переменные окружения настроены в Netlify Dashboard:
-- `VITE_NETLIFY_SITE_ID`
-- `VITE_NETLIFY_BLOBS_TOKEN`
+- `SITE_ID`
+- `NETLIFY_BLOBS_TOKEN`

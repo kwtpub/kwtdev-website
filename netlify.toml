@@ -4,10 +4,12 @@
   command = "npm run build"
   publish = "dist"
 
-# Настройки для Blobs Storage
-[functions]
-  directory = "netlify/functions"
+# Настройки для Edge Functions
+[[edge_functions]]
+  path = "/api/blobs"
+  function = "blobs-api"
 
 # ВАЖНО: Переменные окружения настраиваются в Netlify Dashboard
 # Site settings → Environment variables
+# Нужны: NETLIFY_BLOBS_TOKEN, SITE_ID
 # Не храните токены в этом файле!
