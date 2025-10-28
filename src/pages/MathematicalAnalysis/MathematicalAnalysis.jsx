@@ -7,6 +7,7 @@ import { createProgressManager } from '../../services/progress';
 function MathematicalAnalysis() {
   const [progressManager] = useState(() => createProgressManager());
   const [calculusProgress, setCalculusProgress] = useState({ progress: 0, totalLessons: 0, completedLessons: 0 });
+  const [differentialProgress, setDifferentialProgress] = useState({ progress: 0, totalLessons: 0, completedLessons: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,6 +32,20 @@ function MathematicalAnalysis() {
           completedLessons: calculusTopics.filter(t => t.completedLessons === t.totalLessons).length
         });
         
+        // Фильтруем топики по Differential (id: d1-d8)
+        const differentialTopics = allTopics.filter(t => typeof t.topicId === 'string' && t.topicId.startsWith('d'));
+        
+        // Считаем прогресс для Differential
+        const differentialCompletedIntervals = differentialTopics.reduce((sum, topic) => sum + topic.completedLessons, 0);
+        const differentialTotalIntervals = differentialTopics.reduce((sum, topic) => sum + topic.totalLessons, 0);
+        const differentialOverallProgress = differentialTotalIntervals > 0 ? Math.round((differentialCompletedIntervals / differentialTotalIntervals) * 100) : 0;
+        
+        setDifferentialProgress({
+          progress: differentialOverallProgress,
+          totalLessons: differentialTopics.length,
+          completedLessons: differentialTopics.filter(t => t.completedLessons === t.totalLessons).length
+        });
+        
         setLoading(false);
       } catch (error) {
         console.error('❌ Ошибка загрузки прогресса:', error);
@@ -50,7 +65,14 @@ function MathematicalAnalysis() {
       totalLessons: calculusProgress.totalLessons, 
       completedLessons: calculusProgress.completedLessons
     },
-    {id: 2, name: 'Дифференциальное исчисление', link: 'differential', progress: 0, totalLessons: 0, completedLessons: 0},
+    {
+      id: 2, 
+      name: 'Дифференциальное исчисление', 
+      link: 'differential', 
+      progress: differentialProgress.progress, 
+      totalLessons: differentialProgress.totalLessons, 
+      completedLessons: differentialProgress.completedLessons
+    },
     {id: 3, name: 'Интегральное исчисление', link: 'integral', progress: 0, totalLessons: 0, completedLessons: 0},
   ]
 
