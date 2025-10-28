@@ -1,6 +1,6 @@
 import { TopicProgress } from './TopicProgress.js';
 import { RepetitionScheduler } from './RepetitionScheduler.js';
-import NetlifyBlobsClient from './NetlifyBlobsClient.js';
+import { getStore } from '@netlify/blobs';
 
 /**
  * Главный класс для управления прогрессом обучения (только Netlify Blobs)
@@ -10,32 +10,37 @@ export class ProgressManager {
     this.scheduler = new RepetitionScheduler();
     this.topics = new Map();
     this.isInitialized = false;
-    this.client = null;
+    this.store = null;
     
-    // Инициализируем клиент с правильными параметрами
-    this.initializeClient();
+    // Инициализируем хранилище с правильными параметрами
+    this.initializeStore();
   }
 
   /**
-   * Инициализация клиента с параметрами
+   * Инициализация хранилища с параметрами
    */
-  initializeClient() {
+  initializeStore() {
     try {
       // Получаем параметры из переменных окружения
-      const siteID = import.meta.env.VITE_NETLIFY_SITE_ID || process.env.NETLIFY_SITE_ID;
-      const token = import.meta.env.VITE_NETLIFY_BLOBS_TOKEN || process.env.NETLIFY_BLOBS_TOKEN;
+      const siteID = import.meta.env.VITE_NETLIFY_SITE_ID;
+      const token = import.meta.env.VITE_NETLIFY_BLOBS_TOKEN;
       
       // Проверяем, что мы в браузере и есть необходимые параметры
       if (typeof window !== 'undefined' && siteID && token) {
-        this.client = new NetlifyBlobsClient(siteID, token);
-        console.log('✅ Netlify Blobs клиент инициализирован с параметрами');
+        this.store = getStore({
+          name: 'learning-progress',
+          siteID: siteID,
+          token: token
+        });
+        console.log('✅ Netlify Blobs хранилище инициализировано');
       } else {
-        console.error('❌ Параметры Netlify Blobs не найдены');
-        throw new Error('Необходимы параметры VITE_NETLIFY_SITE_ID и VITE_NETLIFY_BLOBS_TOKEN');
+        console.warn('⚠️ Параметры Netlify Blobs не найдены, работаем без сохранения');
+        console.log('VITE_NETLIFY_SITE_ID:', siteID ? '✅' : '❌');
+        console.log('VITE_NETLIFY_BLOBS_TOKEN:', token ? '✅' : '❌');
       }
     } catch (error) {
-      console.error('❌ Ошибка инициализации Netlify Blobs клиента:', error);
-      throw error;
+      console.error('❌ Ошибка инициализации Netlify Blobs:', error);
+      // Не бросаем ошибку, чтобы приложение продолжило работать
     }
   }
 
@@ -44,23 +49,20 @@ export class ProgressManager {
    */
   async initialize() {
     if (this.isInitialized) return;
-    
-    if (!this.client) {
-      throw new Error('Netlify Blobs клиент не инициализирован');
-    }
 
     try {
-      // Тестируем подключение к Blobs
-      const isConnected = await this.client.test();
-      if (!isConnected) {
-        throw new Error('Не удалось подключиться к Netlify Blobs');
+      // Если хранилище не настроено, работаем только в памяти
+      if (!this.store) {
+        console.log('📝 Работаем без облачного хранилища (только в памяти)');
+        this.isInitialized = true;
+        return;
       }
 
       // Загружаем данные из Blobs
       const data = await Promise.race([
-        this.client.get('topics'),
+        this.store.get('topics', { type: 'text' }),
         new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Blobs timeout')), 5000)
+          setTimeout(() => reject(new Error('Timeout')), 5000)
         )
       ]);
       
@@ -77,8 +79,8 @@ export class ProgressManager {
       
       this.isInitialized = true;
     } catch (error) {
-      console.error('❌ Ошибка загрузки данных из Blobs:', error);
-      throw error;
+      console.warn('⚠️ Ошибка загрузки из Blobs, работаем в памяти:', error.message);
+      this.isInitialized = true; // Продолжаем работу без облачного хранилища
     }
   }
 
@@ -86,24 +88,26 @@ export class ProgressManager {
    * Сохранение данных в Blobs
    */
   async save() {
-    if (!this.client) {
-      throw new Error('Netlify Blobs клиент не инициализирован');
+    // Если хранилище не настроено, пропускаем сохранение
+    if (!this.store) {
+      console.log('💾 Данные хранятся только в памяти (Blobs не настроен)');
+      return;
     }
 
     try {
       const topicsData = Array.from(this.topics.values()).map(topic => topic.toJSON());
       
       await Promise.race([
-        this.client.set('topics', JSON.stringify(topicsData)),
+        this.store.set('topics', JSON.stringify(topicsData)),
         new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Blobs save timeout')), 5000)
+          setTimeout(() => reject(new Error('Timeout')), 5000)
         )
       ]);
       
       console.log('✅ Данные сохранены в Netlify Blobs');
     } catch (error) {
-      console.error('❌ Ошибка сохранения данных в Blobs:', error);
-      throw error;
+      console.warn('⚠️ Ошибка сохранения в Blobs:', error.message);
+      // Не бросаем ошибку, данные остаются в памяти
     }
   }
 
