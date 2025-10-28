@@ -1,6 +1,5 @@
 # Netlify Configuration for Blobs Storage
 
-# Этот файл должен быть в корне проекта как netlify.toml
 [build]
   command = "npm run build"
   publish = "dist"
@@ -9,12 +8,6 @@
 [functions]
   directory = "netlify/functions"
 
-# Переменные окружения для Blobs
-[context.production.environment]
-  NETLIFY_BLOBS_TOKEN = "your-blobs-token-here"
-
-[context.deploy-preview.environment]
-  NETLIFY_BLOBS_TOKEN = "your-blobs-token-here"
-
-[context.branch-deploy.environment]
-  NETLIFY_BLOBS_TOKEN = "your-blobs-token-here"
+# ВАЖНО: Переменные окружения настраиваются в Netlify Dashboard
+# Site settings → Environment variables
+# Не храните токены в этом файле!

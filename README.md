@@ -1,12 +1,58 @@
-# React + Vite
+# KWT Dev Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Персональный веб-сайт с портфолио, навыками и учебными материалами по программированию.
 
-Currently, two official plugins are available:
+## Технологии
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend**: React + Vite
+- **Роутинг**: React Router
+- **Хранилище**: Netlify Blobs (для отслеживания прогресса обучения)
+- **Анимация**: Lottie React
 
-## Expanding the ESLint configuration
+## Быстрый старт
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Установка
+
+```bash
+npm install
+```
+
+### Настройка Netlify Blobs
+
+Для работы с системой отслеживания прогресса нужно настроить Netlify Blobs:
+
+**📖 См. [QUICKSTART.md](./QUICKSTART.md) - инструкция на 5 минут**
+
+Подробная документация: [SETUP_BLOBS.md](./SETUP_BLOBS.md)
+
+### Запуск разработки
+
+```bash
+npm run dev
+```
+
+### Тестирование Netlify Blobs
+
+```bash
+npm run test-blobs
+```
+
+## Структура проекта
+
+```
+src/
+├── components/         # React компоненты
+├── pages/             # Страницы приложения
+├── services/          # Бизнес-логика
+│   └── progress/      # Система отслеживания прогресса
+├── icon/              # SVG иконки
+└── stickers/          # Анимированные стикеры
+```
+
+## Деплой
+
+Проект автоматически деплоится на Netlify при пуше в main ветку.
+
+Убедитесь, что переменные окружения настроены в Netlify Dashboard:
+- `VITE_NETLIFY_SITE_ID`
+- `VITE_NETLIFY_BLOBS_TOKEN`

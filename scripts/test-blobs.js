@@ -1,5 +1,13 @@
 // Скрипт для проверки конфигурации Netlify Blobs
-// Запустите: node scripts/test-blobs.js
+// Запустите: npm run test-blobs
+
+// Загружаем переменные окружения из .env.local
+import { config } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+config({ path: resolve(__dirname, '../.env.local') });
 
 import { getStore } from '@netlify/blobs';
 
