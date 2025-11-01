@@ -1,4 +1,5 @@
 import GithubIcon from '../icon/GithubIcon';
+import { Link } from 'react-router-dom';
 
 function PortfolioSection() {
   return (
@@ -6,6 +7,17 @@ function PortfolioSection() {
       <div className="projects-container projects-border-label">
         <h2 className="projects-label">Портфолио</h2>
         <div className="portfolio-grid">
+          <div className="portfolio-item">
+            <h3>Mobile Landing</h3>
+            <p>Современный адаптивный лендинг для мобильного приложения с темной темой, анимациями и интерактивными компонентами.</p>
+            <div className="portfolio-links">
+              <Link to="/landing" className="github-btn">
+                <GithubIcon />
+                Открыть
+              </Link>
+            </div>
+          </div>
+          
           <div className="portfolio-item">
             <h3>JWT Authentication</h3>
             <p>Система аутентификации с JWT токенами на Node.js. Включает регистрацию, авторизацию и защищенные маршруты.</p>

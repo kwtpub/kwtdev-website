@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   min-width: 320px;
@@ -7,4 +11,48 @@ body {
 
 *, *::before, *::after {
   box-sizing: inherit;
+}
+
+/* Global transitions from mobile-landing */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Support for dark mode */
+html.light {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* Landing page styles - screenshots scroll */
+.screenshots-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.1) transparent;
+}
+
+.light .screenshots-scroll {
+  scrollbar-color: rgb(0 0 0 / 0.2) transparent;
+}
+
+.screenshots-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.screenshots-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.screenshots-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(255 255 255 / 0.1);
+  border-radius: 3px;
+}
+
+.light .screenshots-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(0 0 0 / 0.2);
 }
